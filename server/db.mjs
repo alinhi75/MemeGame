@@ -4,8 +4,14 @@ import sqlite3 from "sqlite3";
 
 // Opening the database
 // NOTE: to work properly you must run the server inside "server" folder (i.e., ./solution/server)
-const db = new sqlite3.Database('DB/db.sqlite', (err) => {
-    if (err) throw err;
-});
+try {
+    const db = new sqlite3.Database('DB/db.sqlite', (err) => {
+        if (err) throw err;
+    });
+} catch (err) {
+    console.log(err);
+} finally {
+    console.log("Database opened successfully");
+}
 
 export default db;
