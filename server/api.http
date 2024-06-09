@@ -1,0 +1,48 @@
+###
+# Authentication Requests
+###
+
+### Register a New User ###
+POST http://localhost:3001/api/register
+Content-Type: application/json
+
+{
+  "username": "example_user",
+  "password": "example_password"
+}
+
+### Login as a User ###
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "example_user",
+  "password": "example_password"
+}
+
+### Logout ###
+POST http://localhost:3001/api/logout
+Cookie: <Your_Session_Cookie>
+
+###
+# Meme Game Requests
+###
+
+### Fetch a Random Meme with Captions ###
+GET http://localhost:3001/api/memes/random-meme
+Cookie: <Your_Session_Cookie>
+
+### Submit a Caption for a Meme ###
+POST http://localhost:3001/api/memes/submit-caption
+Content-Type: application/json
+Cookie: <Your_Session_Cookie>
+
+{
+  "memeId": 1,
+  "captionId": 2,
+  "gameId": 1
+}
+
+### Fetch Game History for a User ###
+GET http://localhost:3001/api/memes/game-history
+Cookie: <Your_Session_Cookie>
