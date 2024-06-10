@@ -1,48 +1,64 @@
-###
-# Authentication Requests
-###
-
-### Register a New User ###
-POST http://localhost:3001/api/register
+### User Login
+POST http://localhost:3000/api/login
 Content-Type: application/json
 
 {
-  "username": "example_user",
-  "password": "example_password"
+  "username": "user1",
+  "password": "password1"
 }
 
-### Login as a User ###
-POST http://localhost:3001/api/login
+### User Logout
+POST http://localhost:3000/api/logout
+Authorization: Bearer <your-jwt-token-here>
+
+### Fetch Random Meme and Captions (Start New Game for Registered User)
+GET http://localhost:3000/api/game/start
+Authorization: Bearer <your-jwt-token-here>
+
+### Fetch Random Meme and Captions (Single Round for Anonymous User)
+GET http://localhost:3000/api/game/anonymous
+
+### Submit Round Result
+POST http://localhost:3000/api/game/round
 Content-Type: application/json
+Authorization: Bearer <your-jwt-token-here>
 
 {
-  "username": "example_user",
-  "password": "example_password"
+  "game_id": 1,
+  "round_id": 1,
+  "meme_id": 3,
+  "selected_caption_id": 5
 }
 
-### Logout ###
-POST http://localhost:3001/api/logout
-Cookie: <Your_Session_Cookie>
-
-###
-# Meme Game Requests
-###
-
-### Fetch a Random Meme with Captions ###
-GET http://localhost:3001/api/memes/random-meme
-Cookie: <Your_Session_Cookie>
-
-### Submit a Caption for a Meme ###
-POST http://localhost:3001/api/memes/submit-caption
+### End Game (after 3 rounds)
+POST http://localhost:3000/api/game/end
 Content-Type: application/json
-Cookie: <Your_Session_Cookie>
+Authorization: Bearer <your-jwt-token-here>
 
 {
-  "memeId": 1,
-  "captionId": 2,
-  "gameId": 1
+  "game_id": 1
 }
 
-### Fetch Game History for a User ###
-GET http://localhost:3001/api/memes/game-history
-Cookie: <Your_Session_Cookie>
+### Fetch User Profile
+GET http://localhost:3000/api/user/profile
+Authorization: Bearer <your-jwt-token-here>
+
+### Fetch User Game History
+GET http://localhost:3000/api/user/history
+Authorization: Bearer <your-jwt-token-here>
+
+### Fetch All Memes (Admin Endpoint)
+GET http://localhost:3000/api/admin/memes
+Authorization: Bearer <your-admin-jwt-token-here>
+
+### Fetch All Captions (Admin Endpoint)
+GET http://localhost:3000/api/admin/captions
+Authorization: Bearer <your-admin-jwt-token-here>
+
+### Fetch Meme Details by ID (Admin Endpoint)
+GET http://localhost:3000/api/admin/memes/{{meme_id}}
+Authorization: Bearer <your-admin-jwt-token-here>
+
+### Fetch Caption Details by ID (Admin Endpoint)
+GET http://localhost:3000/api/admin/captions/{{caption_id}}
+Authorization: Bearer <your-admin-jwt-token-here>
