@@ -1,21 +1,19 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
-import HomePage from './pages/HomePage';
-import ProfilePage from './pages/ProfilePage';
-import NotFoundPage from './pages/NotFoundPage';
-import PrivateRoute from './components/PrivateRoute';
+// src/App.js
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './Components/LoginForm';
+import Game from './Components/Game';
+import Profile from './Components/Profile';
+import Home from './Components/Home';
 
 function App() {
   return (
     <Router>
-      <Switch>
-        <Route path="/" exact component={LoginPage} />
-        <Route path="/login" component={LoginPage} />
-        <PrivateRoute path="/home" component={HomePage} />
-        <PrivateRoute path="/profile" component={ProfilePage} />
-        <Route component={NotFoundPage} />
-      </Switch>
+      <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/game" element={<Game />} />
+          <Route path="/profile" element={<Profile />} />
+      </Routes>
     </Router>
   );
 }
