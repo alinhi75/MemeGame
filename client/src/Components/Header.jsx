@@ -1,25 +1,86 @@
-import React from 'react';
-import { Navbar, Nav, Image } from 'react-bootstrap';
-// import logo from '../assets/logo.png'; // Import your fantasy-themed logo
+import React, { useState } from 'react';
+import {
+  MDBNavbar,
+  MDBNavbarNav,
+  MDBNavbarItem,
+  MDBNavbarToggler,
+  MDBNavbarLink,
+  MDBContainer,
+  MDBIcon,
+  MDBCollapse,
+  MDBBtn
+} from 'mdb-react-ui-kit';
 
-const Header = () => {
-    const logo = 'https://gamerules.com/wp-content/uploads/What-do-You-Meme.png'
+export default function App() {
+  const [showBasic, setShowBasic] = useState(true);
+
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
-      <Navbar.Brand href="#home">
-        <Image src={logo} alt="Meme Game Logo" className="logo-img" />
-        Meme Quest
-      </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ml-auto">
-          <Nav.Link href="/home">Home</Nav.Link>
-          <Nav.Link href="/game">Quests</Nav.Link>
-          <Nav.Link href="/profile">Profile</Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
-  );
-};
+    <header>
+      <MDBNavbar expand='lg' light bgColor='white'>
+        <MDBContainer fluid>
+          <MDBNavbarToggler
+            aria-controls='navbarExample01'
+            aria-expanded='false'
+            aria-label='Toggle navigation'
+          >
+            <MDBIcon fas icon='bars' />
+          </MDBNavbarToggler>
+          <MDBCollapse show={showBasic}>
+            <MDBNavbarNav right className='mb-2 mb-lg-0'>
+              <MDBNavbarItem active>
+                <MDBNavbarLink aria-current='page' href='#'>
+                  Home
+                </MDBNavbarLink>
+              </MDBNavbarItem>
+              <MDBNavbarItem>
+                <MDBNavbarLink href='#'>Features</MDBNavbarLink>
+              </MDBNavbarItem>
+              <MDBNavbarItem>
+                <MDBNavbarLink href='#'>Pricing</MDBNavbarLink>
+              </MDBNavbarItem>
+              <MDBNavbarItem>
+                <MDBNavbarLink href='#'>About</MDBNavbarLink>
+              </MDBNavbarItem>
+            </MDBNavbarNav>
+          </MDBCollapse>
+        </MDBContainer>
+      </MDBNavbar>
 
-export default Header;
+      <div
+        id='intro-example'
+        className='p-5 text-center bg-image'
+        style={{ backgroundImage: "url('../../public/What-do-You-Meme.jpg')" }}
+      >
+        <div className='mask' style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
+          <div className='d-flex justify-content-center align-items-center h-100'>
+            <div className='text-white'>
+              <h1 className='mb-3'>Learn Bootstrap 5 with MDB</h1>
+              <h5 className='mb-4'>Best &amp; free guide of responsive web design</h5>
+              <MDBBtn
+                className="m-2"
+                tag="a"
+                outline
+                size="lg"
+                rel="nofollow"
+                target="_blank"
+                href='https://www.youtube.com/watch?v=c9B4TPnak1A'
+              >
+                Start tutorial
+              </MDBBtn>
+              <MDBBtn
+                className="m-2"
+                tag="a"
+                outline
+                size="lg"
+                target="_blank"
+                href='https://mdbootstrap.com/docs/standard/'
+              >
+                Download MDB UI KIT
+              </MDBBtn>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}
