@@ -11,6 +11,12 @@ Content-Type: application/json
 POST http://localhost:3000/api/logout
 Authorization: Bearer <your-jwt-token-here>
 
+### get user list
+GET http://localhost:3000/api/user
+
+### get user by username
+GET http://localhost:3000/api/user/{username}
+
 ### Fetch Random Meme and Captions (Start New Game for Registered User)
 GET http://localhost:3000/api/game/start
 Authorization: Bearer <your-jwt-token-here>
@@ -55,10 +61,10 @@ Authorization: Bearer <your-admin-jwt-token-here>
 GET http://localhost:3000/api/admin/captions
 Authorization: Bearer <your-admin-jwt-token-here>
 
-### Fetch Meme Details by ID (Admin Endpoint)
-GET http://localhost:3000/api/admin/memes/{{meme_id}}
-Authorization: Bearer <your-admin-jwt-token-here>
+# ### Fetch Meme Details by ID (Admin Endpoint)
+# GET http://localhost:3000/api/admin/memes/{{meme_id}}
+# Authorization: Bearer <your-admin-jwt-token-here>
 
-### Fetch Caption Details by ID (Admin Endpoint)
-GET http://localhost:3000/api/admin/captions/{{caption_id}}
-Authorization: Bearer <your-admin-jwt-token-here>
+# ### Fetch Caption Details by ID (Admin Endpoint)
+# GET http://localhost:3000/api/admin/captions/{{caption_id}}
+# Authorization: Bearer <your-admin-jwt-token-here>
