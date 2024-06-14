@@ -1,21 +1,46 @@
-// src/App.js
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Login from './Components/LoginForm';
-import Game from './Components/Game';
-import Profile from './Components/Profile';
-import Home from './Components/Home';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate,Outlet} from 'react-router-dom';
+import HomePage from './Components/HomePage';
+import LoginPage from './Components/LoginPage';
+import ProfilePage from './Components/ProfilePage';
+import Header from './Components/Header';
+import GamePage from './Components/GamePage';
+import NotFoundPage from './Components/NotFound';
+// import {useHistory,useNavigate} from 'react-router-dom';
+// import { Container, Row, Alert } from 'react-bootstrap';
+import { Container, Navbar } from 'react-bootstrap';
+import { userAPI,adminAPI,gameAPI } from '../API/api';
+// import './App.css'; // Import CSS file for styling
 
-function App() {
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null);
+
+  const handleLogin = (userId) => {
+    setIsLoggedIn(true);
+    setUserId(userId);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setUserId(null);
+  };
+
   return (
-    <Router>
-      <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/game" element={<Game />} />
-          <Route path="/profile" element={<Profile />} />
-      </Routes>
-    </Router>
+    
+          
+          <Routes>
+          <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} />} />
+          <Route path="/login" element={<LoginPage setIsLoggedIn={handleLogin} />} />
+          <Route path="/profile" element={isLoggedIn ? <ProfilePage userId={userId} /> : <Navigate to="/login" />} />
+          {/* <Route path="*" element={<Navigate to="/" />} /> */}
+          <Route path='/game' element={<GamePage/>}/>
+          <Route path="/*" element = {<NotFoundPage/>} />
+          <Route path='/result' element={<GamePage/>}/>
+          </Routes>
+        
+    
   );
-}
+};
 
 export default App;

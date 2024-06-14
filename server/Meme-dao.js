@@ -22,6 +22,15 @@ const getMemeById = async(id) => {
         throw error;
     }
 };
+const getMeme = async() => {
+    try {
+        const meme = await Meme.findOne();
+        return meme;
+    } catch (error) {
+        console.error('Error getting meme:', error);
+        throw error;
+    }
+};
 
 // Create a new meme
 const createMeme = async(imageUrl, captions) => {

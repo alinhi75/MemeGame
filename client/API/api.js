@@ -14,7 +14,7 @@ const api = axios.create({
 const userAPI = {
     login: async(username, password) => {
         try {
-            const response = await api.post('/user/login', { username, password });
+            const response = await api.post('login', { username, password });
             return response.data;
         } catch (error) {
             throw error.response.data.message || 'An error occurred during login.';

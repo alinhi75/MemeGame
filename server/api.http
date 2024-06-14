@@ -3,8 +3,8 @@ POST http://localhost:3000/api/login
 Content-Type: application/json
 
 {
-  "username": "user1",
-  "password": "password1"
+  "username": "ali",
+  "password": "password"
 }
 
 ### User Logout

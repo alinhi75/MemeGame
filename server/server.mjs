@@ -3,10 +3,13 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import passport from 'passport';
-import { Strategy as LocalStrategy } from 'passport-local';
-import bcrypt from 'bcrypt';
+import { Strategy as LocalStrategy } from 'passport-local'
 import { Sequelize, DataTypes } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
+import { login, logout } from './user-dao.mjs';
+import bycrypt from 'bcrypt';
+
+
 
 const app = express();
 const port = 3000;
@@ -53,55 +56,45 @@ app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Passport setup
-passport.use(new LocalStrategy(
-    async(username, password, done) => {
-        try {
-            const user = await User.findOne({ where: { username } });
-            if (!user) {
-                return done(null, false, { message: 'Incorrect username.' });
-            }
-            const match = await bcrypt.compare(password, user.password);
-            if (!match) {
-                return done(null, false, { message: 'Incorrect password.' });
-            }
-            return done(null, user);
-        } catch (error) {
-            return done(error);
-        }
+// Passport setup based on user-data.js
+passport.use(new LocalStrategy(async(username, password, done) => {
+    try {
+        const token = await login(username, password);
+        return done(null, token);
+    } catch (error) {
+        return done(null, false, { message: error.message });
     }
-));
+}));
 
-passport.serializeUser((user, done) => {
-    done(null, user.id);
+passport.serializeUser((token, done) => {
+    done(null, token);
 });
 
-passport.deserializeUser(async(id, done) => {
+passport.deserializeUser(async(token, done) => {
     try {
-        const user = await User.findByPk(id);
+        const user = await logout(token);
         done(null, user);
     } catch (error) {
-        done(error);
+        done(error, null);
     }
 });
 
-// API endpoints
-app.post('/api/user/login', (req, res, next) => {
-    passport.authenticate('local', async(err, user, info) => {
-        if (err) return next(err);
-        if (!user) return res.status(400).json({ message: info.message });
 
-        const token = uuidv4();
-        await user.update({ token });
 
-        req.login(user, (loginErr) => {
-            if (loginErr) return next(loginErr);
-            return res.json({ token });
-        });
-    })(req, res, next);
+
+// login based on user-dao.js and api.js    
+app.post('/api/login', async(req, res) => {
+    const { username, password } = req.body;
+    try {
+        const token = await login(username, password);
+        res.json({ token });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
 });
 
-app.post('/api/user/logout', async(req, res) => {
+
+app.post('/api/logout', async(req, res) => {
     if (!req.isAuthenticated()) {
         return res.status(401).json({ message: 'Not authenticated' });
     }
