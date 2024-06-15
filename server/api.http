@@ -1,5 +1,5 @@
 ### User Login
-POST http://localhost:3000/api/login
+POST http://localhost:3001/api/login
 Content-Type: application/json
 
 {
@@ -61,10 +61,8 @@ Authorization: Bearer <your-admin-jwt-token-here>
 GET http://localhost:3000/api/admin/captions
 Authorization: Bearer <your-admin-jwt-token-here>
 
-# ### Fetch Meme Details by ID (Admin Endpoint)
-# GET http://localhost:3000/api/admin/memes/{{meme_id}}
-# Authorization: Bearer <your-admin-jwt-token-here>
+### get random meme
+GET http://localhost:3001/api/random-meme
+### get random caption
+GET http://localhost:3001/api/caption
 
-# ### Fetch Caption Details by ID (Admin Endpoint)
-# GET http://localhost:3000/api/admin/captions/{{caption_id}}
-# Authorization: Bearer <your-admin-jwt-token-here>
