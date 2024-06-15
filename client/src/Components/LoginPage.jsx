@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-// import './LoginPage.css'; // Import CSS file for styling
 import { userAPI,gameAPI,adminAPI } from '../../API/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -12,25 +10,37 @@ const LoginPage = ({ setIsLoggedIn }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Handle login form submission
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    let response = { data: null }; // Default value to prevent undefined access
+    let response;
     try {
-      response = await userAPI.login(username, password);
-      // response = await axios.post('http://localhost:3000/api/login', { username, password }) || { data: null };
-      if (response.data && response.data.userId) {
-        setIsLoggedIn(response.data.userId);
-        navigate('/profile');
-      } else {
-        setError('Login failed. Please try again.');
-      }
-    } catch (error) {
-      console.error("Login error:", error); // More detailed error logging
-      setError('An error occurred during login. Please try again.');
+        response = await fetch('http://localhost:3001/api/login', { 
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                setIsLoggedIn(true);
+                navigate('/profile');
+            } else if (data.message) {
+                setError(data.message);
+            } else {
+                setError('An error occurred. Please try again later.');
+            }
+        } else {
+            setError('An error occurred. Please try again later.');
+        }
+    } catch (err) {
+        console.error(err);
+        setError('An error occurred. Please try again later.');
     }
-  };
-  const handleLogout
+};
+
 
   return (
     <div className="login-page-container">

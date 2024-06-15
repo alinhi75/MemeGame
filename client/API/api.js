@@ -95,6 +95,14 @@ const gameAPI = {
             throw error.response.data.message || 'An error occurred while starting the game.';
         }
     },
+    getCaption: async() => {
+        try {
+            const response = await api.get('/caption');
+            return response.data;
+        } catch (error) {
+            throw error.response.data.message || 'An error occurred while fetching captions.';
+        }
+    },
 
     // Add other game-related API calls here
 };
