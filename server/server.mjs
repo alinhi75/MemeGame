@@ -8,46 +8,14 @@ import { Sequelize, DataTypes } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import { login, logout } from './user-dao.mjs';
 import bycrypt from 'bcrypt';
-
+import { getMemeById, getAllMemes, createMeme, updateMeme, getRandomMeme } from './Meme-dao.mjs';
+import gameDao from './Meme-dao.mjs';
+import CaptionDao from './Caption-dao.mjs';
+import UserDao from './user-dao.mjs';
 
 
 const app = express();
-const port = 3000;
-
-// Database setup
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: 'database.sqlite',
-});
-
-const User = sequelize.define('User', {
-    username: { type: DataTypes.STRING, unique: true, allowNull: false },
-    password: { type: DataTypes.STRING, allowNull: false },
-    token: { type: DataTypes.STRING, allowNull: true },
-}, { timestamps: false });
-
-const Meme = sequelize.define('Meme', {
-    imageUrl: { type: DataTypes.STRING, allowNull: false },
-    caption: { type: DataTypes.STRING, allowNull: false },
-}, { timestamps: false });
-
-const Game = sequelize.define('Game', {
-    userId: { type: DataTypes.INTEGER, allowNull: true },
-    totalScore: { type: DataTypes.INTEGER, defaultValue: 0 },
-    isCompleted: { type: DataTypes.BOOLEAN, defaultValue: false },
-}, { timestamps: true });
-
-const Round = sequelize.define('Round', {
-    gameId: { type: DataTypes.INTEGER, allowNull: false },
-    memeId: { type: DataTypes.INTEGER, allowNull: false },
-    selectedCaption: { type: DataTypes.STRING, allowNull: true },
-    score: { type: DataTypes.INTEGER, defaultValue: 0 },
-}, { timestamps: true });
-
-Meme.hasMany(Round, { foreignKey: 'memeId' });
-Game.hasMany(Round, { foreignKey: 'gameId' });
-
-sequelize.sync();
+const port = 3001;
 
 // Middleware
 app.use(cors());
@@ -86,7 +54,7 @@ passport.deserializeUser(async(token, done) => {
 app.post('/api/login', async(req, res) => {
     const { username, password } = req.body;
     try {
-        const token = await login(username, password);
+        const token = await UserDao.login(username, password);
         res.json({ token });
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -105,7 +73,7 @@ app.post('/api/logout', async(req, res) => {
 
 app.get('/api/user', async(req, res) => {
     try {
-        const users = await User.findAll({ attributes: ['id', 'username'] });
+        const users = await findAll({ attributes: ['id', 'username'] });
         res.json(users);
     } catch (error) {
         res.status(500).json({ message: 'An error occurred while fetching user list.' });
@@ -135,6 +103,26 @@ app.get('/api/game/start', async(req, res) => {
         res.status(500).json({ message: 'An error occurred while starting the game.' });
     }
 });
+app.get('/api/random-meme', async(req, res) => {
+
+    try {
+        const meme = await gameDao.getRandomMeme();
+        // Explicitly set the Content-Type header
+        res.status(200).json(meme);
+    } catch (error) {
+        console.error('Error fetching random meme:', error);
+        res.status(500).json({ message: 'An error occurred while fetching the random meme.' });
+    }
+});
+app.get('/api/caption', async(req, res) => {
+    try {
+        const caption = await CaptionDao.getRandomCaption();
+        res.status(200).json(caption);
+    } catch (error) {
+        res.status(500).json({ message: 'An error occurred while fetching the caption.' });
+    }
+});
+
 
 app.get('/api/game/:gameId/round/:roundNumber', async(req, res) => {
     try {
@@ -187,35 +175,10 @@ app.get('/api/game/:gameId/result', async(req, res) => {
     }
 });
 
-app.get('/api/meme/:memeId', async(req, res) => {
-    try {
-        const { memeId } = req.params;
-        const meme = await Meme.findByPk(memeId);
-        if (!meme) {
-            return res.status(404).json({ message: 'Meme not found.' });
-        }
-        res.json(meme);
-    } catch (error) {
-        res.status(500).json({ message: 'An error occurred while fetching the meme data.' });
-    }
-});
+
+
 
 // Admin endpoints
-app.get('/api/admin/memes', async(req, res) => {
-    const token = req.headers.authorization ? req.headers.authorization.split(' ')[1] : null;
-    const user = await User.findOne({ where: { token } });
-
-    if (!user || !user.isAdmin) {
-        return res.status(403).json({ message: 'Forbidden' });
-    }
-
-    try {
-        const memes = await Meme.findAll();
-        res.json(memes);
-    } catch (error) {
-        res.status(500).json({ message: 'An error occurred while fetching memes.' });
-    }
-});
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
