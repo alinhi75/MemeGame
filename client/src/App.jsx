@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate,Outlet} from 'react-ro
 import HomePage from './Components/HomePage';
 import LoginPage from './Components/LoginPage';
 import ProfilePage from './Components/ProfilePage';
-import Header from './Components/Header';
 import GamePage from './Components/GamePage';
 import NotFoundPage from './Components/NotFound';
 // import {useHistory,useNavigate} from 'react-router-dom';
@@ -33,7 +32,6 @@ const App = () => {
           <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} />} />
           <Route path="/login" element={<LoginPage setIsLoggedIn={handleLogin} />} />
           <Route path="/profile" element={isLoggedIn ? <ProfilePage userId={userId} /> : <Navigate to="/login" />} />
-          {/* <Route path="*" element={<Navigate to="/" />} /> */}
           <Route path='/game' element={<GamePage/>}/>
           <Route path="/*" element = {<NotFoundPage/>} />
           <Route path='/result' element={<GamePage/>}/>
