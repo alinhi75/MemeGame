@@ -84,22 +84,42 @@ export const deleteCaption = (id) => {
 };
 
 // Function to get a random caption
-export const getRandomCaption = () => {
+// export const getRandomCaption = () => {
+//     return new Promise((resolve, reject) => {
+//         // select 7 random captions
+//         const sql = 'SELECT caption_text FROM captions ORDER BY RANDOM() LIMIT 1';
+//         db.get(sql, [], (err, row) => {
+//             if (err) {
+//                 reject(err);
+//             } else {
+//                 if (row) {
+//                     resolve(row);
+//                 } else {
+//                     reject(new Error('No caption found.'));
+//                 }
+//             }
+//         });
+//     });
+// };
+export const getRandomCaptions = () => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT caption_text FROM Captions ORDER BY RANDOM() LIMIT 1';
-        db.get(sql, [], (err, row) => {
+        // Select 7 random captions
+        const sql = 'SELECT caption_text FROM captions ORDER BY RANDOM() LIMIT 7';
+
+        db.all(sql, [], (err, rows) => {
             if (err) {
                 reject(err);
             } else {
-                if (row) {
-                    resolve(row);
+                if (rows && rows.length > 0) {
+                    resolve(rows.map(row => row.caption_text));
                 } else {
-                    reject(new Error('No caption found.'));
+                    reject(new Error('No captions found.'));
                 }
             }
         });
     });
 };
 
+
 // Export the database connection and other operations
-export default { db, getRandomCaption };
+export default { db, getRandomCaptions };
