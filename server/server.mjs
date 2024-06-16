@@ -116,7 +116,7 @@ app.get('/api/random-meme', async(req, res) => {
 });
 app.get('/api/caption', async(req, res) => {
     try {
-        const caption = await CaptionDao.getRandomCaption();
+        const caption = await CaptionDao.getRandomCaptions();
         res.status(200).json(caption);
     } catch (error) {
         res.status(500).json({ message: 'An error occurred while fetching the caption.' });
