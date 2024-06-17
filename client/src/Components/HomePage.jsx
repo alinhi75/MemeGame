@@ -1,56 +1,6 @@
-// import React from 'react';
-// import { Link, useNavigate } from 'react-router-dom';
-// // import './HomePage.css'; // Import CSS file for styling
-
-// const HomePage = ({ isLoggedIn }) => {
-//   const navigate = useNavigate();
-
-//   const handleAnonymousPlay = () => {
-//     navigate('/game');
-//   };
-
-//   return (
-//     <div className="homepage-container">
-//       <header className="homepage-header">
-//         <div className="logo">🖼️</div>
-//         <h1>What Do You Meme?</h1>
-//         <nav>
-//           <Link to="/">Home</Link>
-//           {isLoggedIn && <Link to="/profile">Profile</Link>}
-//           {isLoggedIn ? (
-//             <Link to="/logout">Logout</Link>
-//           ) : (
-//             <Link to="/login">Login</Link>
-//           )}
-//         </nav>
-//       </header>
-//       <main className="homepage-main">
-//         <h2>Welcome to the Game</h2>
-//         <div className="button-group">
-//           <Link to="/login" className="btn btn-primary">
-//             Login to Play
-//           </Link>
-//           link button to the game page
-          
-//           {/* porvide button which navigate to gamepage */}
-//             <button className="btn btn-primary" onClick={handleAnonymousPlay}>
-//                 Play as Anonymous
-//             </button>
-//         </div>
-//       </main>
-//       <footer className="homepage-footer">
-//         © 2024 Meme Game Inc. | <Link to="/privacy-policy">Privacy Policy</Link>
-//       </footer>
-//     </div>
-//   );
-// };
-
-// export default HomePage;
-
-
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Navbar, Nav, Button } from 'react-bootstrap';
+import { Container, Navbar, Nav, Button,Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const HomePage = ({ isLoggedIn }) => {
@@ -69,7 +19,7 @@ const HomePage = ({ isLoggedIn }) => {
             
             <span role="img" aria-label="Game Logo">
               <img src="../../public/What-do-You-Meme.jpg" width={200} height={100} alt="Game Logo" />
-              </span> What Do You Meme?
+              </span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -83,6 +33,8 @@ const HomePage = ({ isLoggedIn }) => {
               ) : (
                 <Nav.Link as={Link} to="/login">Login</Nav.Link>
               )}
+              <Nav.Link as={Link} to="/game">Play Game</Nav.Link>
+              {/* <Nav.Link as={Link} to="/leaderboard">Leaderboard</Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -90,7 +42,7 @@ const HomePage = ({ isLoggedIn }) => {
 
       {/* Main Content */}
       <Container className="homepage-main text-center mt-5">
-        <h2>Welcome to the Game</h2>
+        <h2>Welcome to the Game</h2><br/>
         <p className="lead">
           Ready to play? Choose your path below:
         </p>
@@ -101,13 +53,52 @@ const HomePage = ({ isLoggedIn }) => {
           <Button variant="primary" className="m-2" onClick={handleAnonymousPlay}>
             Play as Anonymous
           </Button>
-        </div>
+        </div><br/>
+        <h2>Top Player</h2><br/>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Username</th>
+              <th>Total Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>John Doe</td>
+              <td>100</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Jane Doe</td>
+              <td>95</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Anonymous</td>
+              <td>90</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Anonymous</td>
+              <td>85</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Anonymous</td>
+              <td>80</td>
+            </tr>
+            
+            
+          </tbody>
+        </Table>
       </Container>
 
       {/* Footer */}
       <footer className="homepage-footer text-center mt-5">
         <Container>
-          <p>© 2024 Meme Game Inc. | <Link to="/privacy-policy">Privacy Policy</Link></p>
+          <p>© 2024 Meme Game Inc</p>
         </Container>
       </footer>
     </div>

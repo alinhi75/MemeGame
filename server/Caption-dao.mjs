@@ -36,75 +36,10 @@ export const getCaptionById = (id) => {
         });
     });
 };
-
-// Function to create a new caption
-export const createCaption = (text) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO captions (text) VALUES (?)';
-        db.run(sql, [text], function(err) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve({ caption_id: this.lastID, text });
-            }
-        });
-    });
-};
-
-// Function to update a caption
-export const updateCaption = (id, text) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'UPDATE captions SET text = ? WHERE caption_id = ?';
-        db.run(sql, [text, id], function(err) {
-            if (err) {
-                reject(err);
-            } else if (this.changes === 0) {
-                reject(new Error('Caption not found'));
-            } else {
-                resolve({ caption_id: id, text });
-            }
-        });
-    });
-};
-
-// Function to delete a caption
-export const deleteCaption = (id) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'DELETE FROM captions WHERE caption_id = ?';
-        db.run(sql, [id], function(err) {
-            if (err) {
-                reject(err);
-            } else if (this.changes === 0) {
-                reject(new Error('Caption not found'));
-            } else {
-                resolve({ caption_id: id });
-            }
-        });
-    });
-};
-
-// Function to get a random caption
-// export const getRandomCaption = () => {
-//     return new Promise((resolve, reject) => {
-//         // select 7 random captions
-//         const sql = 'SELECT caption_text FROM captions ORDER BY RANDOM() LIMIT 1';
-//         db.get(sql, [], (err, row) => {
-//             if (err) {
-//                 reject(err);
-//             } else {
-//                 if (row) {
-//                     resolve(row);
-//                 } else {
-//                     reject(new Error('No caption found.'));
-//                 }
-//             }
-//         });
-//     });
-// };
 export const getRandomCaptions = () => {
     return new Promise((resolve, reject) => {
         // Select 7 random captions
-        const sql = 'SELECT caption_text FROM captions ORDER BY RANDOM() LIMIT 7';
+        const sql = 'SELECT caption_text FROM captions ORDER BY RANDOM() LIMIT 5';
 
         db.all(sql, [], (err, rows) => {
             if (err) {
@@ -119,7 +54,22 @@ export const getRandomCaptions = () => {
         });
     });
 };
+export const getCorrectCaptionForMeme = (meme_id) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT captionid_match FROM Memes WHERE meme_id = ?';
+        db.get(sql, [meme_id], (err, row) => {
+            if (err) {
+                console.error('Error executing SQL query:', err);
+                reject(err); // Reject with the actual error object
+            } else {
+                if (row) {
+                    resolve(row);
+                } else {
+                    reject(new Error('No caption found for the meme.'));
+                }
+            }
+        });
+    });
+};
 
-
-// Export the database connection and other operations
-export default { db, getRandomCaptions };
+export default { getRandomCaptions, getCorrectCaptionForMeme };

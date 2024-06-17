@@ -122,6 +122,15 @@ app.get('/api/caption', async(req, res) => {
         res.status(500).json({ message: 'An error occurred while fetching the caption.' });
     }
 });
+app.get('/api/correct-caption/:memeId', async(req, res) => {
+    try {
+        const correctCaptionId = await CaptionDao.getCorrectCaptionForMeme(req.params.memeId);
+        res.status(200).json(correctCaptionId.captionid_match);
+    } catch (error) {
+        console.error('Error in /api/correct-caption/:memeId:', error);
+        res.status(500).send('Error fetching correct caption');
+    }
+});
 
 
 app.get('/api/game/:gameId/round/:roundNumber', async(req, res) => {

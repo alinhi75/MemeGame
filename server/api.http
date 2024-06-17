@@ -66,3 +66,6 @@ GET http://localhost:3001/api/random-meme
 ### get random caption
 GET http://localhost:3001/api/caption
 
+### get correct caption by memeid
+GET http://localhost:3001/api/correct-caption/1
+
