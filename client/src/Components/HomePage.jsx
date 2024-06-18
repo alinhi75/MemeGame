@@ -7,7 +7,7 @@ const HomePage = ({ isLoggedIn }) => {
   const navigate = useNavigate();
 
   const handleAnonymousPlay = () => {
-    navigate('/game');
+    navigate('/gameAnonym');
   };
 
   return (

@@ -3,38 +3,42 @@ import { BrowserRouter as Router, Routes, Route, Navigate,Outlet} from 'react-ro
 import HomePage from './Components/HomePage';
 import LoginPage from './Components/LoginPage';
 import ProfilePage from './Components/ProfilePage';
-import GamePage from './Components/GamePage';
+import GamePageAnonym from './Components/GamePageAnonym';
 import NotFoundPage from './Components/NotFound';
-// import {useHistory,useNavigate} from 'react-router-dom';
-// import { Container, Row, Alert } from 'react-bootstrap';
 import { Container, Navbar } from 'react-bootstrap';
 import { userAPI,adminAPI,gameAPI } from '../API/api';
-// import './App.css'; // Import CSS file for styling
+import UserGame from './Components/UserGame';
 
 const App = () => {
+  
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState(localStorage.getItem('username') || '');
 
-  const handleLogin = (userId) => {
+  const handleLogin = (username) => {
     setIsLoggedIn(true);
-    setUserId(userId);
+    setUsername(username);
+    localStorage.setItem('username', username); // Store the username in localStorage
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setUserId(null);
+    setUsername('');
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
   };
 
   return (
     
           
           <Routes>
-          <Route path="/" element={<HomePage isLoggedIn={isLoggedIn} />} />
+          <Route path="/" element={<HomePage setIsLoggedIn={isLoggedIn} />} />
           <Route path="/login" element={<LoginPage setIsLoggedIn={handleLogin} />} />
-          <Route path="/profile" element={isLoggedIn ? <ProfilePage userId={userId} /> : <Navigate to="/login" />} />
-          <Route path='/game' element={<GamePage/>}/>
+          <Route path="/profile" element={<ProfilePage onLogout={() => setIsLoggedIn(false)} />} />
+          <Route path='/gameAnonym' element={<GamePageAnonym/>}/>
           <Route path="/*" element = {<NotFoundPage/>} />
-          <Route path='/result' element={<GamePage/>}/>
+          <Route path='/usergame' element={<UserGame/>}/>
+          {/* <Route path='/result' element={<GamePage/>}/> */}
           </Routes>
         
     
