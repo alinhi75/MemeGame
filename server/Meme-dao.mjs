@@ -86,7 +86,7 @@ export const deleteMeme = (id) => {
 
 export const getRandomMeme = () => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT meme_id,image_path FROM memes ORDER BY RANDOM() LIMIT 1';
+        const sql = 'SELECT  meme_id,image_path FROM memes ORDER BY RANDOM() LIMIT 1';
         db.get(sql, [], (err, row) => {
             if (err) {
                 reject(err);

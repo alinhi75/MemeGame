@@ -9,24 +9,11 @@ const db = new sqlite3.Database("DB/db.db", (err) => {
     console.log("Connected to the database(UserDao).");
 });
 
-// Function to get all users
-export const getUsers = () => {
-    return new Promise((resolve, reject) => {
-        const sql = 'SELECT id, username FROM users';
-        db.all(sql, [], (err, rows) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(rows);
-            }
-        });
-    });
-};
 
 // Function to get a user by ID
-export const getUserById = (id) => {
+export const getUserByUsername = (id) => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT id, username FROM users WHERE id = ?';
+        const sql = 'SELECT * FROM users WHERE username = ?';
         db.get(sql, [id], (err, row) => {
             if (err) {
                 reject(err);
@@ -36,11 +23,6 @@ export const getUserById = (id) => {
         });
     });
 };
-// Function to log in a user with username and password with crypto
-
-
-
-
 
 export const login = (username, password) => {
     return new Promise((resolve, reject) => {
@@ -73,10 +55,6 @@ export const login = (username, password) => {
     });
 };
 
-
-
-
-
 // Function to log out a user
 export const logout = (token) => {
     return new Promise((resolve, reject) => {
@@ -93,4 +71,4 @@ export const logout = (token) => {
     });
 };
 
-export default { getUsers, getUserById, login, logout };
+export default { getUserByUsername, login, logout };

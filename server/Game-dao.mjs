@@ -13,8 +13,21 @@ const db = new sqlite3.Database("DB/db.db", (err) => {
 // select users with highest scores
 export const getHighScores = () => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT user_id, score,game_id FROM Scores ORDER BY score DESC LIMIT 5';
+        const sql = 'SELECT username, score,round FROM Scores ORDER BY score DESC LIMIT 5';
         db.all(sql, [], (err, rows) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(rows);
+            }
+        });
+    });
+
+};
+export const getGameHistory = (username) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM Games WHERE username = ?';
+        db.all(sql, [username], (err, rows) => {
             if (err) {
                 reject(err);
             } else {
@@ -24,4 +37,17 @@ export const getHighScores = () => {
     });
 };
 
-export default { getHighScores };
+const recordGame = (round, username, score, caption) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'INSERT INTO Games (round, username, score, caption) VALUES (?, ?, ?, ?)';
+        db.run(sql, [round, username, score, caption], function(err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve({ id: this.lastID });
+            }
+        });
+    });
+};
+
+export default { getHighScores, getGameHistory, recordGame };

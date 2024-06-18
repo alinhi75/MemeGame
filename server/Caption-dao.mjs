@@ -39,7 +39,7 @@ export const getCaptionById = (id) => {
 export const getRandomCaptions = () => {
     return new Promise((resolve, reject) => {
         // Select 7 random captions
-        const sql = 'SELECT caption_text FROM captions ORDER BY RANDOM() LIMIT 5';
+        const sql = 'SELECT DISTINCT caption_text FROM captions ORDER BY RANDOM() LIMIT 5';
 
         db.all(sql, [], (err, rows) => {
             if (err) {
