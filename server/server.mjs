@@ -5,13 +5,10 @@ import session from 'express-session';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local'
 import { Sequelize, DataTypes } from 'sequelize';
-import { v4 as uuidv4 } from 'uuid';
-import { login, logout } from './user-dao.mjs';
-import bycrypt from 'bcrypt';
-import { getMemeById, getAllMemes, createMeme, updateMeme, getRandomMeme } from './Meme-dao.mjs';
 import gameDao from './Meme-dao.mjs';
 import CaptionDao from './Caption-dao.mjs';
 import UserDao from './user-dao.mjs';
+import ScoreDao from './Game-dao.mjs';
 
 
 const app = express();
@@ -23,6 +20,7 @@ app.use(bodyParser.json());
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.json());
 
 // Passport setup based on user-data.js
 passport.use(new LocalStrategy(async(username, password, done) => {
@@ -70,39 +68,45 @@ app.post('/api/logout', async(req, res) => {
     req.logout();
     res.json({ message: 'Logged out successfully' });
 });
-
-app.get('/api/user', async(req, res) => {
+// get user data by username after login
+app.get('/api/users/:username', async(req, res) => {
     try {
-        const users = await findAll({ attributes: ['id', 'username'] });
-        res.json(users);
+        const user = await UserDao.getUserByUsername(req.params.username);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
     } catch (error) {
-        res.status(500).json({ message: 'An error occurred while fetching user list.' });
+        res.status(500).json({ message: 'An error occurred while fetching the user.' });
     }
 });
 
-// Game endpoints
-app.get('/api/game/start-anonymous', async(req, res) => {
+// get user game history
+app.get('/api/users/:username/games', async(req, res) => {
     try {
-        const newGame = await Game.create({ userId: null });
-        // Logic to set up the first round of the game
-        res.json(newGame);
+        const games = await ScoreDao.getGameHistory(req.params.username);
+        res.json(games);
     } catch (error) {
-        res.status(500).json({ message: 'An error occurred while starting the anonymous game.' });
+        res.status(500).json({ message: 'An error occurred while fetching the user game history.' });
     }
 });
 
-app.get('/api/game/start', async(req, res) => {
-    if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: 'Not authenticated' });
+app.post('/api/record-game', async(req, res) => {
+    const { round, username, score, caption } = req.body;
+
+    if (round === undefined || !username || score === undefined || !caption) {
+        return res.status(400).send('Missing required fields');
     }
+
     try {
-        const newGame = await Game.create({ userId: req.user.id });
-        // Logic to set up the first round of the game
-        res.json(newGame);
+        const game = await ScoreDao.recordGame(round, username, score, caption);
+        res.status(201).json(game);
     } catch (error) {
-        res.status(500).json({ message: 'An error occurred while starting the game.' });
+        console.error('Error in /api/record-game:', error);
+        res.status(500).send('Error recording game');
     }
 });
+
 app.get('/api/random-meme', async(req, res) => {
 
     try {
@@ -129,6 +133,15 @@ app.get('/api/correct-caption/:memeId', async(req, res) => {
     } catch (error) {
         console.error('Error in /api/correct-caption/:memeId:', error);
         res.status(500).send('Error fetching correct caption');
+    }
+});
+app.get('/api/leaderboard', async(req, res) => {
+    try {
+        const leaderboard = await ScoreDao.getHighScores();
+        res.status(200).json(leaderboard);
+    } catch (error) {
+        console.error('Error in /api/leaderboard:', error);
+        res.status(500).send('Error fetching leaderboard');
     }
 });
 
