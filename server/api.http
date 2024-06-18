@@ -11,56 +11,7 @@ Content-Type: application/json
 POST http://localhost:3000/api/logout
 Authorization: Bearer <your-jwt-token-here>
 
-### get user list
-GET http://localhost:3000/api/user
-
-### get user by username
-GET http://localhost:3000/api/user/{username}
-
-### Fetch Random Meme and Captions (Start New Game for Registered User)
-GET http://localhost:3000/api/game/start
-Authorization: Bearer <your-jwt-token-here>
-
-### Fetch Random Meme and Captions (Single Round for Anonymous User)
-GET http://localhost:3000/api/game/anonymous
-
-### Submit Round Result
-POST http://localhost:3000/api/game/round
-Content-Type: application/json
-Authorization: Bearer <your-jwt-token-here>
-
-{
-  "game_id": 1,
-  "round_id": 1,
-  "meme_id": 3,
-  "selected_caption_id": 5
-}
-
-### End Game (after 3 rounds)
-POST http://localhost:3000/api/game/end
-Content-Type: application/json
-Authorization: Bearer <your-jwt-token-here>
-
-{
-  "game_id": 1
-}
-
-### Fetch User Profile
-GET http://localhost:3000/api/user/profile
-Authorization: Bearer <your-jwt-token-here>
-
-### Fetch User Game History
-GET http://localhost:3000/api/user/history
-Authorization: Bearer <your-jwt-token-here>
-
-### Fetch All Memes (Admin Endpoint)
-GET http://localhost:3000/api/admin/memes
-Authorization: Bearer <your-admin-jwt-token-here>
-
-### Fetch All Captions (Admin Endpoint)
-GET http://localhost:3000/api/admin/captions
-Authorization: Bearer <your-admin-jwt-token-here>
-
+#
 ### get random meme
 GET http://localhost:3001/api/random-meme
 ### get random caption
@@ -69,3 +20,23 @@ GET http://localhost:3001/api/caption
 ### get correct caption by memeid
 GET http://localhost:3001/api/correct-caption/1
 
+### get high scores
+GET http://localhost:3001/api/leaderboard
+
+### get Userdata by username
+GET http://localhost:3001/api/users/ali
+
+### get game history by userId
+GET http://localhost:3001/api/users/ali/games
+
+### post game 
+POST http://localhost:3001/api/record-game 
+
+Content-Type: application/json
+
+ 
+  {"round":2,
+  "username":"ali",
+  "score":5
+  }
+ 
