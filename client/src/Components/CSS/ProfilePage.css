@@ -44,3 +44,15 @@
 .error-message {
     color: #dc3545;
 }
+
+#meme_image {
+    /* display: none; */
+    width: 400px;
+    height: 400px;
+}
+
+#correct_selected {
+    color: green;
+    /* bold */
+    font-weight: bold;
+}

@@ -50,3 +50,42 @@ img.img-fluid {
 .alert-info {
     margin-top: 20px;
 }
+
+.message {
+    margin-top: 15px;
+}
+
+.message-info {
+    background-color: #cce5ff;
+    /* Light blue for info */
+}
+
+.message-success {
+    background-color: #d4edda;
+    /* Light green for success */
+}
+
+.message-error {
+    background-color: #f8d7da;
+    /* Light red for error */
+}
+
+.caption-option.correct {
+    background-color: #d4edda;
+    /* Light green for correct captions */
+}
+
+.caption-option.incorrect {
+    background-color: #f8d7da;
+    /* Light red for incorrect captions */
+}
+
+.caption-correct {
+    background-color: green;
+    color: white;
+}
+
+.caption-incorrect {
+    background-color: red;
+    color: white;
+}
