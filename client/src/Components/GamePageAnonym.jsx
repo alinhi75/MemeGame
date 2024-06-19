@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './CSS/GamePage.css'; // Import the custom CSS file
+import './CSS/GamePage.css';
 
 const GamePageAnonym = () => {
     const [meme, setMeme] = useState(null);
@@ -10,9 +10,10 @@ const GamePageAnonym = () => {
     const [selectedCaption, setSelectedCaption] = useState(null);
     const [correctCaptionParts, setCorrectCaptionParts] = useState([]);
     const [round, setRound] = useState(1);
-    const [score, setScore] = useState(0);
+    const [score, setScore] = useState(0); // Initialize score state
     const [message, setMessage] = useState('');
-    const [timer, setTimer] = useState(30); // Timer in seconds
+    const [messageType, setMessageType] = useState('info');
+    const [timer, setTimer] = useState(30);
     const [usedMemes, setUsedMemes] = useState([]);
     const navigate = useNavigate();
 
@@ -38,6 +39,7 @@ const GamePageAnonym = () => {
         } catch (error) {
             console.error('Error fetching random meme:', error);
             setMessage('An error occurred while fetching the random meme.');
+            setMessageType('error');
         }
     };
 
@@ -53,6 +55,7 @@ const GamePageAnonym = () => {
         } catch (error) {
             console.error('Error fetching captions:', error);
             setMessage('An error occurred while fetching the captions.');
+            setMessageType('error');
         }
     };
 
@@ -70,6 +73,7 @@ const GamePageAnonym = () => {
         } catch (error) {
             console.error('Error fetching correct caption:', error);
             setMessage('An error occurred while fetching the correct caption.');
+            setMessageType('error');
         }
     };
 
@@ -113,6 +117,7 @@ const GamePageAnonym = () => {
 
     const handleTimerExpiration = () => {
         setMessage("Time's up! You did not select a caption.");
+        setMessageType('error');
         setTimeout(() => {
             nextRound();
         }, 2000); // Delay before moving to the next round
@@ -124,10 +129,12 @@ const GamePageAnonym = () => {
         const isCorrect = correctCaptionParts.includes(caption);
 
         if (isCorrect) {
-            setScore((prevScore) => prevScore + 5); // 2.5 points for each part
-            setMessage('Correct! You got  it right and 5 points added to your score!');
+            setScore((prevScore) => prevScore + 5); // Increase score by 5 for each correct answer
+            setMessage('Correct! You got it right and 5 points added to your score!');
+            setMessageType('success');
         } else {
             setMessage(`Incorrect! The correct caption was: "${correctCaptionParts.join(' and ')}"`);
+            setMessageType('danger');
         }
 
         setTimeout(() => {
@@ -140,16 +147,20 @@ const GamePageAnonym = () => {
             setRound((prevRound) => prevRound + 1);
             setTimer(30);
             setMessage('Getting ready for the next round...');
+            setMessageType('info');
         } else {
             // Ensure score is calculated before displaying the final message
-            const finalMessage = `Game Over! Your final score is ${score}. You will be redirected to the home page shortly.`;
-            setMessage(finalMessage);
-
-            // Delay the redirection to show the final message
-            setTimeout(() => {
-                navigate('/');
-            }, 3000); // 3 seconds delay before redirecting to the home page
+            // const finalMessage = `Game Over! Your final score is ${score}.`;
+            // setMessage(finalMessage);
+            setMessageType('info');
         }
+    };
+
+    const handlePlayAgain = () => {
+        setRound(1);
+        setScore(0);
+        setUsedMemes([]);
+        initializeRound();
     };
 
     return (
@@ -157,6 +168,8 @@ const GamePageAnonym = () => {
             <Row className="justify-content-center">
                 <Col md={8} className="text-center">
                     <h2 className="mb-4">Round {round}</h2>
+                    <p className="mt-4">Time left: {timer} seconds</p>
+                    {/* {message && <Alert variant={messageType} className="message">{message}</Alert>} */}
                     {meme ? (
                         <>
                             <div className="meme-container">
@@ -173,11 +186,13 @@ const GamePageAnonym = () => {
                                             name="caption"
                                             value={caption}
                                             onClick={() => handleCaptionClick(caption)}
-                                            className="caption-option"
+                                            className={`caption-option ${selectedCaption === caption ? (correctCaptionParts.includes(caption) ? 'correct' : 'incorrect') : ''}`}
                                         />
                                     </div>
                                 ))}
-                                <Button variant="primary" className="mt-3 mr-3" onClick={nextRound}>Skip</Button>
+                                {round < 3 && (
+                                    <Button variant="primary" className="mt-3 mr-3" onClick={nextRound}>Skip</Button>
+                                )}
                                 <Button variant="secondary" className="mt-3" onClick={() => navigate('/')}>Exit</Button>
                             </div>
                         </>
@@ -185,12 +200,24 @@ const GamePageAnonym = () => {
                         <p>Loading...</p>
                     )}
                     <p className="mt-4">Time left: {timer} seconds</p>
-                    {message && <Alert variant="info">{message}</Alert>}
                 </Col>
             </Row>
+            {/* Display alert at the end of the game */}
+            {round === 3 && (
+                <Row className="justify-content-center mt-4">
+                    <Col md={6} className="text-center">
+                        <Alert variant="info">
+                            <p>Game Over! Your final score is {score}.</p>
+                            <Button variant="primary" className="mr-3" onClick={handlePlayAgain}>Play Again</Button>
+                            <Button variant="secondary" onClick={() => navigate('/')}>Homepage</Button>
+                        </Alert>
+                    </Col>
+                </Row>
+            )}
         </Container>
     );
 };
 
 export default GamePageAnonym;
+
 

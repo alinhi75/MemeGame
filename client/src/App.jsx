@@ -5,8 +5,7 @@ import LoginPage from './Components/LoginPage';
 import ProfilePage from './Components/ProfilePage';
 import GamePageAnonym from './Components/GamePageAnonym';
 import NotFoundPage from './Components/NotFound';
-import { Container, Navbar } from 'react-bootstrap';
-import { userAPI,adminAPI,gameAPI } from '../API/api';
+// import { Container, Navbar } from 'react-bootstrap';
 import UserGame from './Components/UserGame';
 
 const App = () => {
@@ -32,13 +31,12 @@ const App = () => {
     
           
           <Routes>
-          <Route path="/" element={<HomePage setIsLoggedIn={isLoggedIn} />} />
+          <Route path="/" element={<HomePage setIsLoggedIn={isLoggedIn}  />} />
           <Route path="/login" element={<LoginPage setIsLoggedIn={handleLogin} />} />
           <Route path="/profile" element={<ProfilePage onLogout={() => setIsLoggedIn(false)} />} />
           <Route path='/gameAnonym' element={<GamePageAnonym/>}/>
           <Route path="/*" element = {<NotFoundPage/>} />
           <Route path='/usergame' element={<UserGame/>}/>
-          {/* <Route path='/result' element={<GamePage/>}/> */}
           </Routes>
         
     

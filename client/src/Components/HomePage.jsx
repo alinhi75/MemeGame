@@ -33,7 +33,7 @@ const HomePage = ({ isLoggedIn }) => {
               ) : (
                 <Nav.Link as={Link} to="/login">Login</Nav.Link>
               )}
-              <Nav.Link as={Link} to="/game">Play Game</Nav.Link>
+              <Nav.Link as={Link} to="/gameAnonym">Play Game</Nav.Link>
               {/* <Nav.Link as={Link} to="/leaderboard">Leaderboard</Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
