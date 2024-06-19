@@ -9,12 +9,12 @@ const GamePageAnonym = () => {
     const [captions, setCaptions] = useState([]);
     const [selectedCaption, setSelectedCaption] = useState(null);
     const [correctCaptionParts, setCorrectCaptionParts] = useState([]);
-    const [round, setRound] = useState(1);
     const [score, setScore] = useState(0); // Initialize score state
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('info');
     const [timer, setTimer] = useState(30);
     const [usedMemes, setUsedMemes] = useState([]);
+    const [captionClicks, setCaptionClicks] = useState(0); // Track caption clicks
     const navigate = useNavigate();
 
     // Function to fetch a random meme
@@ -77,7 +77,7 @@ const GamePageAnonym = () => {
         }
     };
 
-    // Function to initialize data for each round
+    // Function to initialize data for the round
     const initializeRound = async () => {
         const memeId = await fetchRandomMeme();
         const captions = await fetchCaptions();
@@ -99,7 +99,7 @@ const GamePageAnonym = () => {
 
     useEffect(() => {
         initializeRound();
-    }, [round]);
+    }, []);
 
     useEffect(() => {
         const timerInterval = setInterval(() => {
@@ -118,58 +118,32 @@ const GamePageAnonym = () => {
     const handleTimerExpiration = () => {
         setMessage("Time's up! You did not select a caption.");
         setMessageType('error');
-        setTimeout(() => {
-            nextRound();
-        }, 2000); // Delay before moving to the next round
+        setCaptionClicks(1); // End the game after one round
     };
-
+    
     const handleCaptionClick = (caption) => {
         setSelectedCaption(caption);
+        setCaptionClicks(1); // End the game after one round
 
         const isCorrect = correctCaptionParts.includes(caption);
 
         if (isCorrect) {
             setScore((prevScore) => prevScore + 5); // Increase score by 5 for each correct answer
-            setMessage('Correct! You got it right and 5 points added to your score!');
+            setMessage('Correct! You got it right!');
             setMessageType('success');
         } else {
             setMessage(`Incorrect! The correct caption was: "${correctCaptionParts.join(' and ')}"`);
             setMessageType('danger');
         }
-
-        setTimeout(() => {
-            nextRound();
-        }, 2000); // Delay before moving to the next round
-    };
-
-    const nextRound = () => {
-        if (round < 3) {
-            setRound((prevRound) => prevRound + 1);
-            setTimer(30);
-            setMessage('Getting ready for the next round...');
-            setMessageType('info');
-        } else {
-            // Ensure score is calculated before displaying the final message
-            // const finalMessage = `Game Over! Your final score is ${score}.`;
-            // setMessage(finalMessage);
-            setMessageType('info');
-        }
-    };
-
-    const handlePlayAgain = () => {
-        setRound(1);
-        setScore(0);
-        setUsedMemes([]);
-        initializeRound();
     };
 
     return (
         <Container className="game-page-container">
             <Row className="justify-content-center">
                 <Col md={8} className="text-center">
-                    <h2 className="mb-4">Round {round}</h2>
+                    <h2 className="mb-4">Meme Caption Game</h2>
                     <p className="mt-4">Time left: {timer} seconds</p>
-                    {/* {message && <Alert variant={messageType} className="message">{message}</Alert>} */}
+                    {message && <Alert variant={messageType} className="message">{message}</Alert>}
                     {meme ? (
                         <>
                             <div className="meme-container">
@@ -190,10 +164,6 @@ const GamePageAnonym = () => {
                                         />
                                     </div>
                                 ))}
-                                {round < 3 && (
-                                    <Button variant="primary" className="mt-3 mr-3" onClick={nextRound}>Skip</Button>
-                                )}
-                                <Button variant="secondary" className="mt-3" onClick={() => navigate('/')}>Exit</Button>
                             </div>
                         </>
                     ) : (
@@ -203,12 +173,13 @@ const GamePageAnonym = () => {
                 </Col>
             </Row>
             {/* Display alert at the end of the game */}
-            {round === 3 && (
+            {captionClicks === 1 && (
                 <Row className="justify-content-center mt-4">
                     <Col md={6} className="text-center">
                         <Alert variant="info">
                             <p>Game Over! Your final score is {score}.</p>
-                            <Button variant="primary" className="mr-3" onClick={handlePlayAgain}>Play Again</Button>
+                            <p>To play more and see your results, please log in.</p>
+                            <Button variant="primary" className="mr-3" onClick={() => navigate('/login')}>Login</Button>
                             <Button variant="secondary" onClick={() => navigate('/')}>Homepage</Button>
                         </Alert>
                     </Col>
@@ -219,5 +190,4 @@ const GamePageAnonym = () => {
 };
 
 export default GamePageAnonym;
-
 
