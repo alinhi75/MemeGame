@@ -1,14 +1,30 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Navbar, Nav, Button,Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const HomePage = ({ isLoggedIn }) => {
   const navigate = useNavigate();
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [leaderboardData, setLeaderboardData] = useState([]);
 
   const handleAnonymousPlay = () => {
     navigate('/gameAnonym');
   };
+  const fetchLeaderboardData = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/api/leaderboard');
+      if (!response.ok) {
+        throw new Error('Failed to fetch leaderboard data');
+      }
+      const data = await response.json();
+      setLeaderboardData(data);
+      setShowLeaderboard(true);
+    } catch (err) {
+      setError('Failed to fetch leaderboard data. Please try again.');
+    }
+  };
+  fetchLeaderboardData();
 
   return (
     <div className="homepage-container">
@@ -55,44 +71,33 @@ const HomePage = ({ isLoggedIn }) => {
           </Button>
         </div><br/>
         <h2>Top Player</h2><br/>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>Rank</th>
-              <th>Username</th>
-              <th>Total Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>John Doe</td>
-              <td>100</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Jane Doe</td>
-              <td>95</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Anonymous</td>
-              <td>90</td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>Anonymous</td>
-              <td>85</td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>Anonymous</td>
-              <td>80</td>
-            </tr>
-            
-            
-          </tbody>
-        </Table>
+        
+          <div className="leaderboard-table">
+            <h2>Leaderboard</h2>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Username</th>
+                  
+                  <th>Total Score</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {leaderboardData.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{entry.username}</td>
+                    <td>{entry.total_score}</td>
+                    
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {/* <button className='btn btn-danger m-2' onClick={() => setShowLeaderboard(false)}>Cancel</button> */}
+          </div>
+        
       </Container>
 
       {/* Footer */}
