@@ -92,14 +92,14 @@ app.get('/api/users/:username/games', async(req, res) => {
 });
 
 app.post('/api/record-game', async(req, res) => {
-    const { round, username, score, caption } = req.body;
+    const { round, username, score, caption, rightcaption, image_path } = req.body;
 
-    if (round === undefined || !username || score === undefined || !caption) {
+    if (round === undefined || !username || score === undefined || !caption || !image_path) {
         return res.status(400).send('Missing required fields');
     }
 
     try {
-        const game = await ScoreDao.recordGame(round, username, score, caption);
+        const game = await ScoreDao.recordGame(round, username, score, caption, rightcaption, image_path);
         res.status(201).json(game);
     } catch (error) {
         console.error('Error in /api/record-game:', error);
