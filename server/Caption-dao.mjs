@@ -72,4 +72,4 @@ export const getCorrectCaptionForMeme = (meme_id) => {
     });
 };
 
-export default { getRandomCaptions, getCorrectCaptionForMeme };
+export default { getRandomCaptions, getCorrectCaptionForMeme, getCaptionById, getAllCaptions };

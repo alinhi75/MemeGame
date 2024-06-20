@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './CSS/ProfilePage.css';
+import { AuthContext } from '../AuthContext';
 
-const ProfilePage = ({ onLogout }) => {
+const ProfilePage = ({isLoggedIn,handleLogout}) => {
+  const { user, logout } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
-  const username = location.state?.username || null;
+  const username = location.state?.username || localStorage.getItem('username');
   const [gameHistory, setGameHistory] = useState([]);
   const [error, setError] = useState('');
   const [totalScore, setTotalScore] = useState(0);
   const [userInfo, setUserInfo] = useState(null);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState([]);
-  
-  // Pagination state
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(1); // Number of items per page
+  const [itemsPerPage] = useState(1);
 
   useEffect(() => {
     if (!username) {
@@ -33,7 +34,7 @@ const ProfilePage = ({ onLogout }) => {
         ]);
         const userData = await userResponse.json();
         const gameData = await gameResponse.json();
-        
+
         setUserInfo(userData);
         setGameHistory(gameData);
         calculateTotalScore(gameData);
@@ -47,15 +48,19 @@ const ProfilePage = ({ onLogout }) => {
   const calculateTotalScore = (games) => {
     let total = 0;
     games.forEach(game => {
-      total += game.score; // Adjusted to match the data structure
+      total += game.score;
     });
     setTotalScore(total);
   };
 
-  const handleLogout = () => {
-    onLogout();
+  const handleLogoutClick = () => {
+    handleLogout();
     navigate('/');
   };
+
+  if (!username) {
+    return <p>Loading...</p>;
+  }
 
   const fetchLeaderboardData = async () => {
     try {
@@ -75,7 +80,6 @@ const ProfilePage = ({ onLogout }) => {
     navigate('/UserGame', { state: { username } });
   };
 
-  // Pagination functions
   const totalPages = Math.ceil(gameHistory.length / itemsPerPage);
 
   const goToPage = (page) => {
@@ -90,7 +94,6 @@ const ProfilePage = ({ onLogout }) => {
     setCurrentPage((prevPage) => prevPage - 1);
   };
 
-  // Calculate which games to display based on current page
   const indexOfLastGame = currentPage * itemsPerPage;
   const indexOfFirstGame = indexOfLastGame - itemsPerPage;
   const currentGames = gameHistory.slice(indexOfFirstGame, indexOfLastGame);
@@ -115,10 +118,9 @@ const ProfilePage = ({ onLogout }) => {
               <div className="card-body">
                 <h3 className="card-title">Game {indexOfFirstGame + index + 1} - Total Score: {game.score}</h3>
                 <p>Round: {game.round}</p>
-                
-                <img id='meme_image' src={game.image_path} alt="Game" className="game-image img-thumbnail"  /><br/><br/>
-                <p  >Caption Selected: {game.caption}</p> {/* Display caption here */}
-                {game.score === 0 && <p id='correct_selected' >Correct Caption: {game.rightcaption}</p>}
+                <img id='meme_image' src={game.image_path} alt="Game" className="game-image img-thumbnail" /><br /><br />
+                <p className={`caption-selected ${game.score === 0 ? 'incorrect' : ''}`}>Caption Selected: {game.caption}</p>
+                {game.score === 0 && <p id='correct_selected'>Correct Caption: {game.rightcaption}</p>}
               </div>
             </div>
           ))
@@ -144,7 +146,7 @@ const ProfilePage = ({ onLogout }) => {
       <h3>Total Score of All Games: {totalScore}</h3>
       <div className="action-buttons text-center">
         <button className="btn btn-primary m-2" onClick={handlePlayGame}>Play Game</button>
-        <button className="btn btn-secondary m-2" onClick={handleLogout}>Logout</button>
+        <button className="btn btn-secondary m-2" onClick={handleLogoutClick}>Logout</button>
         <button className='btn btn-primary m-2' onClick={fetchLeaderboardData}>Leaderboard</button>
         <button className='btn btn-primary m-2' onClick={() => navigate('/')}>Homepage</button>
         {showLeaderboard && (
@@ -155,18 +157,16 @@ const ProfilePage = ({ onLogout }) => {
                 <tr>
                   <th>#</th>
                   <th>Username</th>
-                  
                   <th>Total Score</th>
-                  
                 </tr>
               </thead>
               <tbody>
                 {leaderboardData.map((entry, index) => (
                   <tr key={index}>
+                    
                     <td>{index + 1}</td>
                     <td>{entry.username}</td>
                     <td>{entry.total_score}</td>
-                    
                   </tr>
                 ))}
               </tbody>
@@ -180,5 +180,4 @@ const ProfilePage = ({ onLogout }) => {
 };
 
 export default ProfilePage;
-
 

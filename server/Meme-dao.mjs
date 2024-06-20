@@ -37,52 +37,6 @@ export const getMemeById = (id) => {
     });
 };
 
-// Function to create a new meme
-export const createMeme = (imagePath) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO memes (image_path) VALUES (?)';
-        db.run(sql, [imagePath], function(err) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve({ meme_id: this.lastID, image_path: imagePath });
-            }
-        });
-    });
-};
-
-// Function to update a meme
-export const updateMeme = (id, imagePath) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'UPDATE memes SET image_path = ? WHERE meme_id = ?';
-        db.run(sql, [imagePath, id], function(err) {
-            if (err) {
-                reject(err);
-            } else if (this.changes === 0) {
-                reject(new Error('Meme not found'));
-            } else {
-                resolve({ meme_id: id, image_path: imagePath });
-            }
-        });
-    });
-};
-
-// Function to delete a meme
-export const deleteMeme = (id) => {
-    return new Promise((resolve, reject) => {
-        const sql = 'DELETE FROM memes WHERE meme_id = ?';
-        db.run(sql, [id], function(err) {
-            if (err) {
-                reject(err);
-            } else if (this.changes === 0) {
-                reject(new Error('Meme not found'));
-            } else {
-                resolve({ meme_id: id });
-            }
-        });
-    });
-};
-//return image_path;
 
 export const getRandomMeme = () => {
     return new Promise((resolve, reject) => {
@@ -101,21 +55,5 @@ export const getRandomMeme = () => {
         });
     });
 };
-// export const getRandomMeme = () => {
-//     return new Promise((resolve, reject) => {
-//         const sql = 'SELECT meme_id, image_path FROM memes ORDER BY RANDOM() LIMIT 1';
-//         db.get(sql, [], (err, row) => {
-//             if (err) {
-//                 reject(err);
-//             } else {
-//                 resolve(row);
-//             }
-//         });
-//     });
-// };
 
-// Export other CRUD operations here if needed...
-
-// export default db;
-
-export default { getRandomMeme };
+export default { getRandomMeme, getMemeById, getAllMemes };

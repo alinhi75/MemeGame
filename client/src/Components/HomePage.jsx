@@ -1,9 +1,9 @@
-import React,{useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Navbar, Nav, Button,Table } from 'react-bootstrap';
+import { Container, Navbar, Nav, Button, Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const HomePage = ({ isLoggedIn }) => {
+const HomePage = ({ isLoggedIn, handleLogout }) => {
   const navigate = useNavigate();
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState([]);
@@ -11,20 +11,26 @@ const HomePage = ({ isLoggedIn }) => {
   const handleAnonymousPlay = () => {
     navigate('/gameAnonym');
   };
-  const fetchLeaderboardData = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/api/leaderboard');
-      if (!response.ok) {
-        throw new Error('Failed to fetch leaderboard data');
+
+  useEffect(() => {
+    const fetchLeaderboardData = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/leaderboard');
+        if (!response.ok) {
+          throw new Error('Failed to fetch leaderboard data');
+        }
+        const data = await response.json();
+        setLeaderboardData(data);
+        setShowLeaderboard(true);
+      } catch (err) {
+        setError('Failed to fetch leaderboard data. Please try again.');
       }
-      const data = await response.json();
-      setLeaderboardData(data);
-      setShowLeaderboard(true);
-    } catch (err) {
-      setError('Failed to fetch leaderboard data. Please try again.');
-    }
-  };
-  fetchLeaderboardData();
+    };
+
+    fetchLeaderboardData(); // Call fetchLeaderboardData only once on mount
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="homepage-container">
@@ -32,10 +38,9 @@ const HomePage = ({ isLoggedIn }) => {
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
           <Navbar.Brand>
-            
             <span role="img" aria-label="Game Logo">
               <img src="../../public/What-do-You-Meme.jpg" width={200} height={100} alt="Game Logo" />
-              </span>
+            </span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -45,11 +50,13 @@ const HomePage = ({ isLoggedIn }) => {
             </Nav>
             <Nav>
               {isLoggedIn ? (
-                <Nav.Link as={Link} to="/logout">Logout</Nav.Link>
+                <Button onClick={handleLogout} variant="outline-light">Logout</Button>
+                
               ) : (
                 <Nav.Link as={Link} to="/login">Login</Nav.Link>
               )}
-              <Nav.Link as={Link} to="/gameAnonym">Play Game</Nav.Link>
+              {isLoggedIn && <Nav.Link as={Link} to="/usergame">User Game</Nav.Link>}
+              <Nav.Link as={Link} to="/gameAnonym">Anonymous Game</Nav.Link>
               {/* <Nav.Link as={Link} to="/leaderboard">Leaderboard</Nav.Link> */}
             </Nav>
           </Navbar.Collapse>
@@ -58,7 +65,7 @@ const HomePage = ({ isLoggedIn }) => {
 
       {/* Main Content */}
       <Container className="homepage-main text-center mt-5">
-        <h2>Welcome to the Game</h2><br/>
+        <h2>Welcome to the Game</h2><br />
         <p className="lead">
           Ready to play? Choose your path below:
         </p>
@@ -69,35 +76,32 @@ const HomePage = ({ isLoggedIn }) => {
           <Button variant="primary" className="m-2" onClick={handleAnonymousPlay}>
             Play as Anonymous
           </Button>
-        </div><br/>
-        <h2>Top Player</h2><br/>
-        
-          <div className="leaderboard-table">
-            <h2>Leaderboard</h2>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Username</th>
-                  
-                  <th>Total Score</th>
-                  
+        </div><br />
+        <h2>Top Player</h2><br />
+
+        <div className="leaderboard-table">
+          <h2>Leaderboard</h2>
+          <table className="table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Total Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leaderboardData.map((entry, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{entry.username}</td>
+                  <td>{entry.total_score}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {leaderboardData.map((entry, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{entry.username}</td>
-                    <td>{entry.total_score}</td>
-                    
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {/* <button className='btn btn-danger m-2' onClick={() => setShowLeaderboard(false)}>Cancel</button> */}
-          </div>
-        
+              ))}
+            </tbody>
+          </table>
+          {/* <button className='btn btn-danger m-2' onClick={() => setShowLeaderboard(false)}>Cancel</button> */}
+        </div>
+
       </Container>
 
       {/* Footer */}

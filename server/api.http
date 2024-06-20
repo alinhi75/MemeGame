@@ -29,14 +29,11 @@ GET http://localhost:3001/api/users/ali
 ### get game history by userId
 GET http://localhost:3001/api/users/ali/games
 
-### post game 
-POST http://localhost:3001/api/record-game 
-
+### post session
+POST http://localhost:3001/api/sessions
 Content-Type: application/json
-
- 
-  {"round":2,
-  "username":"ali",
-  "score":5
-  }
- 
+# Authorization
+{
+  "username": "ali",
+  "password": "password"
+}

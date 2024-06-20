@@ -2,30 +2,48 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import session from 'express-session';
+import { check, validationResult } from 'express-validator';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local'
-import { Sequelize, DataTypes } from 'sequelize';
 import gameDao from './Meme-dao.mjs';
 import CaptionDao from './Caption-dao.mjs';
 import UserDao from './user-dao.mjs';
 import ScoreDao from './Game-dao.mjs';
+import crypto from 'crypto';
+import userDao from './user-dao.mjs';
 
 
 const app = express();
 const port = 3001;
 
-// Middleware
-app.use(cors());
+
+app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200,
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, httpOnly: true, maxAge: 3600000 }
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.json());
 
-// Passport setup based on user-data.js
+
+
+//passport setup local strategy
 passport.use(new LocalStrategy(async(username, password, done) => {
     try {
-        const token = await login(username, password);
+        const token = await UserDao.login(username, password);
         return done(null, token);
     } catch (error) {
         return done(null, false, { message: error.message });
@@ -38,13 +56,52 @@ passport.serializeUser((token, done) => {
 
 passport.deserializeUser(async(token, done) => {
     try {
-        const user = await logout(token);
+        const user = await userDao.validateToken(token);
         done(null, user);
     } catch (error) {
         done(error, null);
     }
 });
 
+app.use(passport.authenticate('session'));
+
+app.post('/api/sessions', async(req, res) => {
+    const { username, password } = req.body;
+    try {
+        const user = await userDao.login(username, password);
+        req.session.user = user; // Store user in session
+        res.status(201).json(user);
+    } catch (err) {
+        res.status(401).json({ message: err.message });
+    }
+});
+
+const isAuthenticated = (req, res, next) => {
+    if (req.session.user) {
+        next();
+    } else {
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+};
+
+app.get('/api/profile', isAuthenticated, (req, res) => {
+    res.json(req.session.user);
+});
+
+
+
+app.get('/api/sessions', (req, res) => {
+    if (req.isAuthenticated()) {
+        return res.status(200).json(req.user);
+    }
+    return res.status(401).json({ message: 'Not authenticated' });
+});
+
+app.delete('/api/sessions', (req, res) => {
+    req.logout(() => {
+        res.end();
+    });
+});
 
 
 
@@ -58,6 +115,7 @@ app.post('/api/login', async(req, res) => {
         res.status(400).json({ message: error.message });
     }
 });
+
 
 
 app.post('/api/logout', async(req, res) => {

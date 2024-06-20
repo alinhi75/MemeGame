@@ -56,3 +56,11 @@
     /* bold */
     font-weight: bold;
 }
+
+.caption-selected {
+    font-weight: bold;
+}
+
+.caption-selected.incorrect {
+    color: red;
+}

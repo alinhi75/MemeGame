@@ -1,5 +1,6 @@
 import sqlite3 from 'sqlite3';
 import crypto from 'crypto';
+// import jwt from 'jsonwebtoken';
 
 const db = new sqlite3.Database("DB/db.db", (err) => {
     if (err) {
@@ -9,12 +10,11 @@ const db = new sqlite3.Database("DB/db.db", (err) => {
     console.log("Connected to the database(UserDao).");
 });
 
-
-// Function to get a user by ID
-export const getUserByUsername = (id) => {
+// Function to get a user by username
+export const getUserByUsername = (username) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM users WHERE username = ?';
-        db.get(sql, [id], (err, row) => {
+        db.get(sql, [username], (err, row) => {
             if (err) {
                 reject(err);
             } else {
@@ -24,7 +24,10 @@ export const getUserByUsername = (id) => {
     });
 };
 
-export const login = (username, password) => {
+
+
+
+const login = (username, password) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM users WHERE username = ?';
         db.get(sql, [username], (err, row) => {
@@ -33,11 +36,7 @@ export const login = (username, password) => {
             } else if (!row) {
                 reject(new Error('Invalid username'));
             } else {
-                const user = { id: row.id, username: row.username, name: row.name };
-
-                // Determine the length of the stored hash
                 const storedHashLength = Buffer.from(row.password_hash, 'hex').length;
-
                 crypto.scrypt(password, row.salt, storedHashLength, (err, derivedKey) => {
                     if (err) {
                         reject(err);
@@ -46,10 +45,21 @@ export const login = (username, password) => {
                         if (!crypto.timingSafeEqual(storedPasswordHash, derivedKey)) {
                             reject(new Error('Invalid password'));
                         } else {
-                            resolve(user);
+                            resolve({ userId: row.id, username: row.username });
                         }
                     }
                 });
+            }
+        });
+    });
+};
+export const validateToken = (token) => {
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, 'secret', (err, decoded) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(decoded);
             }
         });
     });
@@ -71,4 +81,4 @@ export const logout = (token) => {
     });
 };
 
-export default { getUserByUsername, login, logout };
+export default { getUserByUsername, login, logout, validateToken };
