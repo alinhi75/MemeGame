@@ -7,7 +7,7 @@ import './CSS/GamePage.css';
 const UserGame = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const username = location.state?.username;
+    const username = location.state?.username || localStorage.getItem('username');
 
     const [meme, setMeme] = useState(null);
     const [captions, setCaptions] = useState([]);

@@ -1,0 +1,42 @@
+/* HomePage.css */
+
+.homepage-container {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.navbar-brand img {
+    width: 150px;
+    height: auto;
+}
+
+.homepage-main {
+    flex: 1;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.leaderboard-table {
+    margin-top: 2rem;
+}
+
+.leaderboard-table table {
+    margin: 0 auto;
+    width: 80%;
+}
+
+footer.homepage-footer {
+    background-color: #343a40;
+    color: white;
+    padding: 1rem 0;
+}
+
+footer.homepage-footer p {
+    margin: 0;
+}

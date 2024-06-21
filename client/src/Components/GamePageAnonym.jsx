@@ -178,8 +178,10 @@ const GamePageAnonym = () => {
                     <Col md={6} className="text-center">
                         <Alert variant="info">
                             <p>Game Over! Your final score is {score}.</p>
-                            <p>To play more and see your results, please log in.</p>
-                            <Button variant="primary" className="mr-3" onClick={() => navigate('/login')}>Login</Button>
+                            <p>To Play more and see your results and other users, please log in.</p>
+                            
+                            <Button variant="primary" className="mr-3" onClick={() => window.location.reload()}>Play Again</Button>
+                            {/* <Button variant="primary" className="mr-3" onClick={() => navigate('/gameAnonym')}>Play Again</Button> */}
                             <Button variant="secondary" onClick={() => navigate('/')}>Homepage</Button>
                         </Alert>
                     </Col>

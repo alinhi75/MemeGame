@@ -2,14 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Navbar, Nav, Button, Table } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './CSS/HomePage.css'; // Import the external CSS file
+import { AuthContext } from '../AuthContext';
 
-const HomePage = ({ isLoggedIn, handleLogout }) => {
+const HomePage = ({ handleLogout }) => {
   const navigate = useNavigate();
-  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [leaderboardData, setLeaderboardData] = useState([]);
+  const [username, setUsername] = useState(localStorage.getItem('username') || '');
+  const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
+  const [error, setError] = useState('');
 
   const handleAnonymousPlay = () => {
     navigate('/gameAnonym');
+  };
+
+  const handlePlayGame = () => {
+    navigate('/usergame', { state: { username: username } });
   };
 
   useEffect(() => {
@@ -21,16 +29,21 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
         }
         const data = await response.json();
         setLeaderboardData(data);
-        setShowLeaderboard(true);
       } catch (err) {
         setError('Failed to fetch leaderboard data. Please try again.');
       }
     };
 
-    fetchLeaderboardData(); // Call fetchLeaderboardData only once on mount
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchLeaderboardData();
   }, []);
+
+  const handleLogoutClick = () => {
+    localStorage.removeItem('username');
+    localStorage.removeItem('isLoggedIn');
+    setUsername('');
+    setIsLoggedIn(false);
+    handleLogout(); // Perform logout actions (e.g., clear session on server)
+  };
 
   return (
     <div className="homepage-container">
@@ -47,17 +60,19 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
             <Nav className="me-auto">
               <Nav.Link as={Link} to="/">Home</Nav.Link>
               {isLoggedIn && <Nav.Link as={Link} to="/profile">Profile</Nav.Link>}
+              {isLoggedIn && <p className="text-light mt-2">Welcome, {username}</p>}
             </Nav>
             <Nav>
               {isLoggedIn ? (
-                <Button onClick={handleLogout} variant="outline-light">Logout</Button>
-                
+                <Button onClick={handleLogoutClick} variant="outline-light">Logout</Button>
               ) : (
                 <Nav.Link as={Link} to="/login">Login</Nav.Link>
               )}
-              {isLoggedIn && <Nav.Link as={Link} to="/usergame">User Game</Nav.Link>}
-              <Nav.Link as={Link} to="/gameAnonym">Anonymous Game</Nav.Link>
-              {/* <Nav.Link as={Link} to="/leaderboard">Leaderboard</Nav.Link> */}
+              {isLoggedIn ? (
+                <Nav.Link onClick={handlePlayGame} as={Link} to="/usergame">Play Game</Nav.Link>
+              ) : (
+                <Nav.Link as={Link} to="/gameAnonym">Anonymous Game</Nav.Link>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
@@ -70,18 +85,16 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
           Ready to play? Choose your path below:
         </p>
         <div className="button-group">
-          <Button as={Link} to="/login" variant="primary" className="m-2">
-            Login to Play
-          </Button>
+          {isLoggedIn ? (<Button as={Link} to="/usergame" variant="primary" className="m-2">Play As User</Button>) : (<Button as={Link} to="/login" variant="primary" className="m-2">Login to Play</Button>)}
           <Button variant="primary" className="m-2" onClick={handleAnonymousPlay}>
-            Play as Anonymous
+            Play As Anonymous
           </Button>
         </div><br />
         <h2>Top Player</h2><br />
 
         <div className="leaderboard-table">
           <h2>Leaderboard</h2>
-          <table className="table">
+          <Table striped bordered hover>
             <thead>
               <tr>
                 <th>#</th>
@@ -98,16 +111,15 @@ const HomePage = ({ isLoggedIn, handleLogout }) => {
                 </tr>
               ))}
             </tbody>
-          </table>
-          {/* <button className='btn btn-danger m-2' onClick={() => setShowLeaderboard(false)}>Cancel</button> */}
+          </Table>
         </div>
-
       </Container>
 
       {/* Footer */}
       <footer className="homepage-footer text-center mt-5">
         <Container>
           <p>© 2024 Meme Game Inc</p>
+          <p>Created By Sayedali Noohi</p>
         </Container>
       </footer>
     </div>
