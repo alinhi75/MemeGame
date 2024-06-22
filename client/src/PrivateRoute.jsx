@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Navigate } from 'react-router-dom';
 
+// PrivateRoute component
 const PrivateRoute = ({ element: Component, ...rest }) => {
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // Check if logged in
 
