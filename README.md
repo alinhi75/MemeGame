@@ -175,7 +175,7 @@
 ## Screenshots
 
 ### Home Page
-img/HomePage.png
+![Alt text](img\HomePage.png)
 
 ### Profile Page
 
