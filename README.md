@@ -184,5 +184,5 @@
 
 ## Users Credentials
 
-- ali, password 
-- ali2, ali2 
+- *Username* : ali, *Password* : password 
+- *Username* : ali2, *Password* : ali2 
