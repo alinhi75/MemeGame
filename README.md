@@ -179,7 +179,7 @@
 
 ### Profile Page
 
-(img/ProfilePage.png)
+![Alt text](img/ProfilePage.png)
 
 
 ## Users Credentials
