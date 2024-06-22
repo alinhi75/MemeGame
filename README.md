@@ -175,7 +175,7 @@
 ## Screenshots
 
 ### Home Page
-(img/HomePage.png)
+img/HomePage.png
 
 ### Profile Page
 
