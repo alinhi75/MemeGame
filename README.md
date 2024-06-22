@@ -174,9 +174,12 @@
 
 ## Screenshots
 
-![Screenshot1](.img\HomePage.png)
+### Home Page
+(./img/HomePage.png)
 
-![Screenshot2](./img/ProfilePage.png)
+### Profile Page
+
+(./img/ProfilePage.png)
 
 
 ## Users Credentials
