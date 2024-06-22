@@ -175,11 +175,19 @@
 ## Screenshots
 
 ### Home Page
+<<<<<<< HEAD
 (img\HomePage.png)
 
 ### Profile Page
 
 (img\ProfilePage.png)
+=======
+(img/HomePage.png)
+
+### Profile Page
+
+(img/ProfilePage.png)
+>>>>>>> 2475e2502d709c8fd755419c63cde62d4fb77d26
 
 
 ## Users Credentials
