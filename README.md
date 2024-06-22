@@ -175,11 +175,11 @@
 ## Screenshots
 
 ### Home Page
-(./img/HomePage.png)
+(img\HomePage.png)
 
 ### Profile Page
 
-(./img/ProfilePage.png)
+(img\ProfilePage.png)
 
 
 ## Users Credentials
