@@ -26,7 +26,7 @@ export const getUserByUsername = (username) => {
 
 
 
-
+// Function to log in a user
 const login = (username, password) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM users WHERE username = ?';
@@ -53,6 +53,7 @@ const login = (username, password) => {
         });
     });
 };
+// function to validate the token when the user is logged in
 export const validateToken = (token) => {
     return new Promise((resolve, reject) => {
         jwt.verify(token, 'secret', (err, decoded) => {

@@ -10,6 +10,8 @@ const LoginPage = () => {
   const [IsLoggedIn,setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
+  // Function to handle login and create a session for the user
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {

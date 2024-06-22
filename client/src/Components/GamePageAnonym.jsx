@@ -9,21 +9,22 @@ const GamePageAnonym = () => {
     const [captions, setCaptions] = useState([]);
     const [selectedCaption, setSelectedCaption] = useState(null);
     const [correctCaptionParts, setCorrectCaptionParts] = useState([]);
-    const [score, setScore] = useState(0); // Initialize score state
+    const [score, setScore] = useState(0); 
     const [message, setMessage] = useState('');
     const [messageType, setMessageType] = useState('info');
     const [timer, setTimer] = useState(30);
     const [usedMemes, setUsedMemes] = useState([]);
-    const [captionClicks, setCaptionClicks] = useState(0); // Track caption clicks
+    const [captionClicks, setCaptionClicks] = useState(0); 
     const navigate = useNavigate();
 
     // Function to fetch a random meme
+
     const fetchRandomMeme = async () => {
         try {
             let memeId;
             let data;
 
-            // Retry fetching a meme until a unique one is found
+
             do {
                 const response = await fetch('http://localhost:3001/api/random-meme');
                 if (!response.ok) {
@@ -33,9 +34,9 @@ const GamePageAnonym = () => {
                 memeId = data.meme_id;
             } while (usedMemes.includes(memeId));
 
-            setMeme(data); // Assuming `data` contains the meme object with `meme_id` and `image_path`
-            setUsedMemes([...usedMemes, memeId]); // Add memeId to usedMemes
-            return memeId; // Return the meme_id for use in subsequent functions
+            setMeme(data);
+            setUsedMemes([...usedMemes, memeId]); 
+            return memeId;
         } catch (error) {
             console.error('Error fetching random meme:', error);
             setMessage('An error occurred while fetching the random meme.');
@@ -44,6 +45,7 @@ const GamePageAnonym = () => {
     };
 
     // Function to fetch captions
+
     const fetchCaptions = async () => {
         try {
             const response = await fetch('http://localhost:3001/api/caption');
@@ -51,7 +53,7 @@ const GamePageAnonym = () => {
                 throw new Error('Failed to fetch captions');
             }
             const data = await response.json();
-            return data; // Assuming `data` is an array of caption strings
+            return data; 
         } catch (error) {
             console.error('Error fetching captions:', error);
             setMessage('An error occurred while fetching the captions.');
@@ -60,6 +62,7 @@ const GamePageAnonym = () => {
     };
 
     // Function to fetch the correct caption based on meme_id
+
     const fetchCorrectCaption = async (memeId) => {
         try {
             const response = await fetch(`http://localhost:3001/api/correct-caption/${memeId}`);
@@ -67,8 +70,8 @@ const GamePageAnonym = () => {
                 throw new Error('Failed to fetch correct caption');
             }
             const data = await response.json();
-            const parts = data.split(','); // Split the correct caption by comma
-            setCorrectCaptionParts(parts); // Set the parts of the correct caption
+            const parts = data.split(','); 
+            setCorrectCaptionParts(parts); 
             return parts;
         } catch (error) {
             console.error('Error fetching correct caption:', error);
@@ -78,6 +81,7 @@ const GamePageAnonym = () => {
     };
 
     // Function to initialize data for the round
+
     const initializeRound = async () => {
         const memeId = await fetchRandomMeme();
         const captions = await fetchCaptions();
@@ -93,6 +97,7 @@ const GamePageAnonym = () => {
     };
 
     // Shuffle array function
+    
     const shuffleArray = (array) => {
         return array.sort(() => Math.random() - 0.5);
     };

@@ -10,7 +10,7 @@ const db = new sqlite3.Database("DB/db.db", (err) => {
 });
 
 
-// select users with highest scores
+// Set the Leaderboard
 export const getHighScores = () => {
     return new Promise((resolve, reject) => {
         // select for each distinct user the total score
@@ -25,6 +25,7 @@ export const getHighScores = () => {
     });
 
 };
+// Get the Game History for Profile of the User
 export const getGameHistory = (username) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Games WHERE username = ?';
@@ -37,7 +38,7 @@ export const getGameHistory = (username) => {
         });
     });
 };
-
+// Function for recording the game of the users into database
 const recordGame = (round, username, score, caption, rightcaption, image_path) => {
     return new Promise((resolve, reject) => {
         const sql = 'INSERT INTO Games (round, username, score, caption,rightcaption,image_path) VALUES (?, ?, ?, ?,?,?)';

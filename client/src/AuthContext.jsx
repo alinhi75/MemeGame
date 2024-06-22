@@ -9,6 +9,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Check if the user is logged in by checking localStorage
+    
     const storedUsername = localStorage.getItem('username');
     if (storedUsername) {
       setIsLoggedIn(true);

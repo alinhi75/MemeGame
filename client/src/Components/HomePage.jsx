@@ -12,13 +12,19 @@ const HomePage = ({ handleLogout }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true');
   const [error, setError] = useState('');
 
+  //Play the game as an anonymous user
+
   const handleAnonymousPlay = () => {
     navigate('/gameAnonym');
   };
 
+  // Function to handle playing the game as a user if the user is logged in
+
   const handlePlayGame = () => {
     navigate('/usergame', { state: { username: username } });
   };
+
+  // Fetch leaderboard data from the server
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
@@ -37,6 +43,9 @@ const HomePage = ({ handleLogout }) => {
     fetchLeaderboardData();
   }, []);
 
+  // Function to handle logout button when the user is logged in and wants to logout
+  //Clear the local storage and set the state to false and clear the session on the server
+  
   const handleLogoutClick = () => {
     localStorage.removeItem('username');
     localStorage.removeItem('isLoggedIn');

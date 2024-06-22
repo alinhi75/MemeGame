@@ -36,6 +36,7 @@ export const getCaptionById = (id) => {
         });
     });
 };
+// Function to get a Random Caption for Games
 export const getRandomCaptions = () => {
     return new Promise((resolve, reject) => {
         // Select 7 random captions
@@ -54,13 +55,14 @@ export const getRandomCaptions = () => {
         });
     });
 };
+// Function to include the correct caption for the meme
 export const getCorrectCaptionForMeme = (meme_id) => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT captionid_match FROM Memes WHERE meme_id = ?';
         db.get(sql, [meme_id], (err, row) => {
             if (err) {
                 console.error('Error executing SQL query:', err);
-                reject(err); // Reject with the actual error object
+                reject(err);
             } else {
                 if (row) {
                     resolve(row);

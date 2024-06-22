@@ -22,7 +22,8 @@ const UserGame = () => {
     const [messageType, setMessageType] = useState('info');
     const [captionClicks, setCaptionClicks] = useState(0);
 
-    // Function to fetch a random meme
+    // Function to fetch a random meme from the API
+
     const fetchRandomMeme = async () => {
         try {
             let memeId;
@@ -47,7 +48,8 @@ const UserGame = () => {
         }
     };
 
-    // Function to fetch captions
+    // Function to fetch captions from the API
+
     const fetchCaptions = async () => {
         try {
             const response = await fetch('http://localhost:3001/api/caption');
@@ -64,6 +66,7 @@ const UserGame = () => {
     };
 
     // Function to fetch correct caption parts for a given meme ID
+
     const fetchCorrectCaption = async (memeId) => {
         try {
             const response = await fetch(`http://localhost:3001/api/correct-caption/${memeId}`);
@@ -82,6 +85,7 @@ const UserGame = () => {
     };
 
     // Function to initialize a new round
+
     const initializeRound = async () => {
         const memeId = await fetchRandomMeme();
         const captions = await fetchCaptions();
@@ -95,17 +99,20 @@ const UserGame = () => {
         }
     };
 
-    // Function to shuffle an array
+    // Function to shuffle an array of all captions
+
     const shuffleArray = (array) => {
         return array.sort(() => Math.random() - 0.5);
     };
 
     // Effect to initialize the first round on component mount or round change
+
     useEffect(() => {
         initializeRound();
     }, [round]);
 
     // Effect to handle the game timer
+
     useEffect(() => {
         const timerInterval = setInterval(() => {
             setTimer((prevTimer) => (prevTimer > 0 ? prevTimer - 1 : prevTimer));
@@ -115,6 +122,7 @@ const UserGame = () => {
     }, []);
 
     // Effect to handle timer expiration
+
     useEffect(() => {
         if (timer === 0) {
             handleTimerExpiration();
@@ -122,6 +130,7 @@ const UserGame = () => {
     }, [timer]);
 
     // Function to handle timer expiration
+
     const handleTimerExpiration = () => {
         setMessage("Time's up! You did not select a caption.");
         setMessageType('danger');
@@ -131,6 +140,7 @@ const UserGame = () => {
     };
 
     // Function to handle caption click
+
     const handleCaptionClick = (caption) => {
         setSelectedCaption(caption);
         setCaptionClicks((prevClicks) => prevClicks + 1);
@@ -162,6 +172,7 @@ const UserGame = () => {
     };
 
     // Function to record game state
+
     const recordGameState = async (isCorrect) => {
         try {
             const response = await fetch('http://localhost:3001/api/record-game', {
@@ -209,6 +220,7 @@ const UserGame = () => {
     };
 
     // Function to get caption class based on correctness
+    
     const getCaptionClass = (caption) => {
         if (!selectedCaption) return '';
 

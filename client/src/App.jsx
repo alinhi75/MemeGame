@@ -6,7 +6,7 @@ import ProfilePage from './Components/ProfilePage';
 import GamePageAnonym from './Components/GamePageAnonym';
 import NotFoundPage from './Components/NotFound';
 import UserGame from './Components/UserGame';
-import { AuthProvider } from './Components/AuthComponent';
+import { AuthProvider } from './AuthContext';
 
 const App = () => {
   const [username, setUsername] = useState(localStorage.getItem('username') || '');

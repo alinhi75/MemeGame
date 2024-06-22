@@ -37,7 +37,7 @@ export const getMemeById = (id) => {
     });
 };
 
-
+// Function to get a random meme For our Game
 export const getRandomMeme = () => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT  meme_id,image_path FROM memes ORDER BY RANDOM() LIMIT 1';
@@ -47,7 +47,7 @@ export const getRandomMeme = () => {
             } else {
                 if (row) {
 
-                    resolve(row); // Resolve with the row containing image_path
+                    resolve(row);
                 } else {
                     reject(new Error('No meme found.'));
                 }

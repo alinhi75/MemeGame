@@ -18,6 +18,8 @@ const ProfilePage = ({isLoggedIn,handleLogout}) => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(1);
+ 
+  // check if user is logged in or not
 
   useEffect(() => {
     if (!username) {
@@ -25,6 +27,7 @@ const ProfilePage = ({isLoggedIn,handleLogout}) => {
       navigate('/');
       return;
     }
+    // Fetch user data and game history
 
     const fetchUserData = async () => {
       try {
@@ -45,6 +48,7 @@ const ProfilePage = ({isLoggedIn,handleLogout}) => {
     fetchUserData();
   }, [username, navigate]);
 
+  // Function to calculate total score of all games
   const calculateTotalScore = (games) => {
     let total = 0;
     games.forEach(game => {
@@ -52,15 +56,19 @@ const ProfilePage = ({isLoggedIn,handleLogout}) => {
     });
     setTotalScore(total);
   };
+  // Function to handle logout
 
   const handleLogoutClick = () => {
     handleLogout();
     navigate('/');
   };
+  // handle login Error
 
   if (!username) {
     return <p>Loading...</p>;
   }
+
+  // Function to fetch leaderboard data
 
   const fetchLeaderboardData = async () => {
     try {
@@ -76,10 +84,14 @@ const ProfilePage = ({isLoggedIn,handleLogout}) => {
     }
   };
 
+  // Function to handle play game
+
   const handlePlayGame = () => {
     navigate('/UserGame', { state: { username } });
   };
-
+  
+  // Pagination logic
+  
   const totalPages = Math.ceil(gameHistory.length / itemsPerPage);
 
   const goToPage = (page) => {
