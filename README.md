@@ -181,6 +181,15 @@
 
 ![Alt text](img/ProfilePage.png)
 
+### User Game
+
+![Alt text](img/UserGame.png)
+
+
+### User Game Summary
+
+![Alt text](img/GameSummary.png)
+
 
 ## Users Credentials
 
