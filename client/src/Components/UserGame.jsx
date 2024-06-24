@@ -17,12 +17,12 @@ const UserGame = () => {
     const [round, setRound] = useState(1);
     const [score, setScore] = useState(0);
     const [message, setMessage] = useState('');
-    const [timer, setTimer] = useState(30); // Timer in seconds
+    const [timer, setTimer] = useState(30);
     const [usedMemes, setUsedMemes] = useState([]);
     const [messageType, setMessageType] = useState('info');
     const [gameSummary, setGameSummary] = useState([]);
     const [gameEnded, setGameEnded] = useState(false);
-    const [gameIds, setGameIds] = useState([]); // Store game IDs
+    const [gameIds, setGameIds] = useState([]); 
 
     const fetchRandomMeme = async () => {
         try {
@@ -133,7 +133,7 @@ const UserGame = () => {
         alert("Time's up! You did not select a caption and score for this round is 0. Moving on to the next round...");
         alert(`The correct caption was: "${correctCaptionParts.join(' <AND> ')}"`);
         setMessageType('danger');
-    // i want to show in summary that no caption was selected or time's up
+   
         
         gameSummary.push({
             round,
@@ -143,7 +143,7 @@ const UserGame = () => {
             correctCaption: correctCaptionParts.join(' <AND> ')
         });
 
-        // updateGameSummary(`Game:${game.round}No caption selected or time's Up`, false); // Record no caption selected (incorrect
+        
         setTimeout(() => {
             nextRound();
         }, 2000);
@@ -170,7 +170,7 @@ const UserGame = () => {
             if (round < 3 && !gameEnded) {
                 nextRound();
             } else {
-                setGameEnded(true); // Set gameEnded to true after round 3
+                setGameEnded(true); 
             }
         }, 2000);
     };
@@ -187,7 +187,7 @@ const UserGame = () => {
             }
         ]);
 
-        // Record game state after updating summary
+       
         recordGameState(isCorrect);
     };
 
@@ -211,7 +211,7 @@ const UserGame = () => {
                 throw new Error('Failed to record game state');
             }
             const data = await response.json();
-            setGameIds((prevGameIds) => [...prevGameIds, data.id]); // Store game ID
+            setGameIds((prevGameIds) => [...prevGameIds, data.id]); 
         } catch (error) {
             console.error('Error recording game state:', error);
             setMessage('An error occurred while recording the game state.');
@@ -229,7 +229,7 @@ const UserGame = () => {
                     throw new Error('Failed to delete game record');
                 }
             }
-            setGameIds([]); // Clear game IDs after deletion
+            setGameIds([]); 
         } catch (error) {
             console.error('Error deleting game records:', error);
             setMessage('An error occurred while deleting the game records.');
@@ -244,7 +244,7 @@ const UserGame = () => {
             alert('Getting ready for the next round...');
             setSelectedCaption(null);
         } else {
-            setGameEnded(true); // Set gameEnded to true after round 3
+            setGameEnded(true); 
         }
     };
 
@@ -256,7 +256,7 @@ const UserGame = () => {
         setMessageType('info');
         setGameSummary([]);
         setGameEnded(false);
-        setGameIds([]); // Clear game IDs
+        setGameIds([]); 
         initializeRound();
     };
 
