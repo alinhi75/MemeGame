@@ -51,5 +51,16 @@ const recordGame = (round, username, score, caption, rightcaption, image_path) =
         });
     });
 };
-
-export default { getHighScores, getGameHistory, recordGame };
+export const deleteGame = (gameId) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'DELETE FROM Games WHERE game_id = ?';
+        db.run(sql, [gameId], function(err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve({ id: this.lastID });
+            }
+        });
+    });
+};
+export default { getHighScores, getGameHistory, recordGame, deleteGame };

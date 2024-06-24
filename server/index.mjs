@@ -171,6 +171,16 @@ app.post('/api/record-game', async(req, res) => {
         res.status(500).send('Error recording game');
     }
 });
+//delete the record of the game
+app.delete('/api/games/:gameId', async(req, res) => {
+    try {
+        const game = await ScoreDao.deleteGame(req.params.gameId);
+        res.status(200).json(game);
+    } catch (error) {
+        console.error('Error in /api/games/:gameId:', error);
+        res.status(500).send('Error deleting game');
+    }
+});
 // Random meme endpoint
 
 app.get('/api/random-meme', async(req, res) => {
@@ -184,6 +194,8 @@ app.get('/api/random-meme', async(req, res) => {
         res.status(500).json({ message: 'An error occurred while fetching the random meme.' });
     }
 });
+
+
 // get Random Captions for the game
 
 app.get('/api/caption', async(req, res) => {

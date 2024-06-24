@@ -137,7 +137,7 @@ const GamePageAnonym = () => {
             setMessage('Correct! You got it right!');
             setMessageType('success');
         } else {
-            setMessage(`Incorrect! The correct caption was: "${correctCaptionParts.join(' and ')}"`);
+            setMessage(`Incorrect! The correct caption was: "${correctCaptionParts.join(' <AND> ')}"`);
             setMessageType('danger');
         }
     };
@@ -187,7 +187,7 @@ const GamePageAnonym = () => {
                             
                             <Button variant="primary" className="mr-3" onClick={() => window.location.reload()}>Play Again</Button>
                             {/* <Button variant="primary" className="mr-3" onClick={() => navigate('/gameAnonym')}>Play Again</Button> */}
-                            <Button variant="secondary" onClick={() => navigate('/')}>Homepage</Button>
+                            <Button variant="danger" className='mr-3' onClick={() => navigate('/')}>Homepage</Button>
                         </Alert>
                     </Col>
                 </Row>
