@@ -125,6 +125,17 @@
   - `400 Bad Request`: Missing required fields.
   - `500 Internal Server Error`: An error occurred while recording the game.
 
+ ## DELETE `/api/games/:gameId`
+- **Purpose:** Delete the record of a specific game by its ID.
+- **Request Parameters:**
+  - `gameId (URL parameter)` : The ID of the game to be deleted.
+  - **Response Body Content:**
+  - `On success` : JSON object representing the deleted game, including the id.
+  - `On failure` : Error message.
+  - **Response Status Codes and Possible Errors:**
+  - `200 OK`: Successfully deleted the game.
+  - `500 Internal Server Error`: An error occurred while deleting the game.
+
 ## GET `/api/random-meme`
 - **Purpose:** Retrieve a random meme.
 - **Request Parameters:** None.
