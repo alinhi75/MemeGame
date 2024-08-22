@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Exam : "Meme Game"
 ## Student: S327132 Noohi Sayedali 
 
@@ -206,3 +207,7 @@
 
 - *Username* : ali, *Password* : password 
 - *Username* : ali2, *Password* : ali2 
+=======
+# MemeGame
+This project focuses on enhancing user experience with engaging features. I’m continually developing and enhancing this project to make it better every day. Your feedback and suggestions are highly appreciated, as they help me improve and innovate further. Thank you for your support and encouragement!
+>>>>>>> b7649ba52a5f654cdd1d4b32ca00a0e811ec4e2a
